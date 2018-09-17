@@ -39,9 +39,12 @@ void DisplayGxGDEW075Z09::AddNewTimeLineModule(const std::vector<DateContent>& d
 
 void DisplayGxGDEW075Z09::TestAddNewTimeLineModule()
 {
+   // Date currentDate;   
     std::vector<DateContent> data;
     DateContent tempData {18,9,2018,"hello"};
+    DateContent tempData2 {29,9,2018,"hello"};
     data.push_back(tempData);
+    data.push_back(tempData2);
     DisplayModule* currentModule = new DisplayModuleTimeLine(data);
     m_modules.push_back(currentModule);
 }
