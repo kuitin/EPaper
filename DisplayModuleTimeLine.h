@@ -5,19 +5,21 @@
 #include <vector>
 
 struct  DateContent {    
-    int day;
-    int month;
-    int year;
-    char* eventDetails;
+    unsigned int date;
+    String eventDetails;
 };
 
 class DisplayModuleTimeLine : public DisplayModule 
 {
 	public:
-    DisplayModuleTimeLine(const std::vector<DateContent>& data);
+    DisplayModuleTimeLine(unsigned int currentDate, unsigned int period, const std::vector<DateContent>& data);
     void FillModule(GxEPD& m_GxEPD);
     bool updateTimeOnly = false;
+    
 	private :
+    std::vector<DateContent> m_data;
+    unsigned int m_currentDate = 0;
+    unsigned int m_period = 0;
 
 };
 
