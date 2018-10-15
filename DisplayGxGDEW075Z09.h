@@ -3,7 +3,7 @@
 #include "DisplayEPaper.h"
 #include "DisplayModuleClock.h"
 #include <DisplayModuleTimeLine.h>
-// #include <GxGDEW075Z09/GxGDEW075Z09.h>      // 7.5" b/w/r
+#include <GxGDEW075Z09/GxGDEW075Z09.h>      // 7.5" b/w/r
 class DisplayGxGDEW075Z09 : public DisplayEPaper 
 {
 	public:

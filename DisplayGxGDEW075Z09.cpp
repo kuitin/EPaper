@@ -1,9 +1,5 @@
 #include "DisplayGxGDEW075Z09.h"
 
- #include <GxIO/GxIO_SPI/GxIO_SPI.cpp>
- #include <GxIO/GxIO.cpp>
- #include <GxGDEW075Z09/GxGDEW075Z09.cpp>      // 7.5" b/w/r
- #include <DisplayModule.h>
 // FreeFonts from Adafruit_GFX
 #include <Fonts/FreeMonoBold9pt7b.h>
 #include <Fonts/FreeMonoBold12pt7b.h>

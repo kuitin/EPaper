@@ -2,9 +2,7 @@
 #define _DisplayEPaper_H_
 
 #include <GxEPD.h>
-// #include <GxGDEW075Z09/GxGDEW075Z09.cpp>      // 7.5" b/w/r
 #include <GxIO/GxIO_SPI/GxIO_SPI.h>
-// #include <GxIO/GxIO.cpp>
 
 #include <DisplayModule.h>
 #include <vector>
