@@ -3,6 +3,7 @@
 #include <DisplayModule.h>
 #include "iostream"
 #include <vector>
+#include "Trad/DisplayEPaperTrad.h"
 
 struct  DateContent {    
     unsigned int date;
@@ -20,6 +21,7 @@ class DisplayModuleTimeLine : public DisplayModule
     std::vector<DateContent> m_data;
     unsigned int m_currentDate = 0;
     unsigned int m_period = 0;
+    String makeTime(unsigned long timestamp );
 
 };
 

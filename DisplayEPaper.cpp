@@ -9,8 +9,8 @@ void DisplayEPaper::TestAddNewTimeLineModule()
 {
    // Date currentDate;   
     std::vector<DateContent> data;
-    DateContent tempData {1537387991,"hello123456789123456777777"};
-    DateContent tempData2 {1537647210,"hello"};
+    DateContent tempData {1540497817,"hello123456789123456777777"};
+    DateContent tempData2 {1540497817,"hello"};
     data.push_back(tempData);
     data.push_back(tempData2);
     DisplayModule* currentModule = new DisplayModuleTimeLine(1537387581, 5256000, data);
