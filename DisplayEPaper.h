@@ -6,6 +6,7 @@
 #include <DisplayModuleTimeLine.h>
 #include <DisplayModule.h>
 #include "DisplayModuleClock.h"
+#include "DisplayModuleWeather.h"
 #include <vector>
 class DisplayEPaper 
 {
@@ -13,6 +14,7 @@ class DisplayEPaper
 	DisplayEPaper(char CS, char DC, char RST);
 	virtual void AddNewModule(DisplayModule* currentModule);
 	virtual void TestAddNewTimeLineModule();
+	virtual void TestAddNewWeatherModule();
 	virtual	void AddNewClockModule(int cornerThickness, int width, int height,bool updateTime);
 	virtual void AddNewTimeLineModule(const std::vector<DateContent>& data);
 	virtual void DrawModules() = 0;

@@ -32,6 +32,7 @@ void loop() {
 //  displaya.DrawModules();
     Serial.println("endDraw 1");
   displaya.TestAddNewTimeLineModule();
+  displaya.TestAddNewWeatherModule();
   displaya.AddNewClockModule(1,100,100, false);
  // displaya.AddNewClockModule(1,100,100, true);
   displaya.DrawModules();

@@ -24,7 +24,7 @@ class DataWeather
 class DisplayModuleWeather : public DisplayModule 
 {
 	public:
-    DisplayModuleWeather(int cornerThickness, int width, int height, DataWeather dataWeather ) : DisplayModule( cornerThickness,  width,  height), m_dataWeather(dataWeather){};
+    DisplayModuleWeather(DataWeather dataWeather ) :  DisplayModule( 1,  200,  200), m_dataWeather(dataWeather){};
     void FillModule(GxEPD& m_GxEPD);
     bool updateTimeOnly = false;
 	private :

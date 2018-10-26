@@ -75,14 +75,72 @@ void DisplayModuleTimeLine::FillModule(GxEPD& m_GxEPD)
             m_GxEPD.println(sentenceToDisplay);
       }
 }
+static const unsigned char countTime = 15;
+static const unsigned long summerTime [countTime] = { 1553994000,
+                                                      1585443600,
+                                                      1616893200,
+                                                      1648342800,
+                                                      1679792400,
+                                                      1711846800,
+                                                      1743296400,
+                                                      1774746000,
+                                                      1806195600,
+                                                      1837645200,
+                                                      1869094800,
+                                                      1901149200,
+                                                      1932598800,
+                                                      1964048400};
+                                                      
+static const unsigned long winterTime [countTime] = { 1540688400, 
+                                                      1572138000,
+                                                      1603587600,
+                                                      1635642000,
+                                                      1667091600,
+                                                      1698541200,
+                                                      1729990800,
+                                                      1761440400,
+                                                      1792890000,
+                                                      1824944400,
+                                                      1856394000,
+                                                      1887843600,
+                                                      1919293200,
+                                                      1950742800,
+                                                      1982797200 };
 
 String DisplayModuleTimeLine::makeTime(unsigned long timestamp ){
 // source:https://stackoverflow.com/questions/7136385/calculate-day-number-from-an-unix-timestamp-in-a-math-way
 // note year argument is full four digit year (or digits since 2000), i.e.1975, (year 8 is 2008)
-  
-  String result;
-      unsigned char minute = (timestamp / 60) % 60;
-      unsigned char hour = (timestamp / 3600) % 24;
+     // Manage Winter/Summer time
+     int utf = 2;
+     bool isfound = false;
+
+     if(timestamp < summerTime[0] || 
+        timestamp > winterTime[countTime - 1])
+     {
+         // winter time
+         utf -= 1; 
+         isfound = true;
+     }
+     
+     for(int itr = 0; itr < countTime && false == isfound; itr++)
+     {        
+        if( timestamp >= summerTime[itr] &&
+            timestamp < winterTime[itr] )
+            {
+               // SUmmer time do nothing
+               isfound = true;
+            }
+     }
+     if( isfound == false )
+     {
+         // winter time
+         utf -= 1; 
+         isfound = true;
+     }
+ // Convert time stamp to string date
+    String result;
+    unsigned char minute = (timestamp / 60) % 60;
+    unsigned char hour = (timestamp / 3600) % 24;
 
     int z = timestamp / 86400 + 719468;
     int era = (z >= 0 ? z : z - 146096) / 146097;
