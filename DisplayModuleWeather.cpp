@@ -4,6 +4,9 @@
 #include "utility/BitmapExamples.h"
 #include "utility/IMG_0001.h"
 #include "utility/IMG_0002.h"
+
+
+
 void DisplayModuleWeather::FillModule(GxEPD& m_GxEPD)
 {
       Point relativePos = GetPosRelative();
@@ -25,7 +28,35 @@ void DisplayModuleWeather::FillModule(GxEPD& m_GxEPD)
       
       m_GxEPD.setCursor(relativePos.x, relativePos.y + 150 );
       m_GxEPD.println(String(m_dataWeather.TemperatureIn, 1 ) );
-      m_GxEPD.drawExampleBitmap(gImage_IMG_0002, relativePos.x + 130, relativePos.y + 3, 83, 62, GxEPD_BLACK);
+      tImage config;
+      const uint8_t* iconWeather =  weatherToIcon(DataWeather::cloud, &config);
+      m_GxEPD.drawExampleBitmap(image_data_wicloudy, relativePos.x + 130, relativePos.y + 3, config.width, config.height, GxEPD_BLACK);
       
       
+}
+
+const uint8_t* DisplayModuleWeather::weatherToIcon(DataWeather::IconWeater value, tImage * config)
+{
+      switch(value)
+      {
+            case DataWeather::cloud:
+                  *config = wicloudy;
+                  return image_data_wicloudy;
+            break;
+
+            case DataWeather::rain:
+                  *config = wihail;
+                  return image_data_wihail;
+            break;
+
+            case DataWeather::sun:
+                  *config = widaysunny;
+                  return image_data_widaysunny;
+            break;
+
+            default:
+                  *config = wialien;
+                  return image_data_wialien;
+            break;
+      }
 }
