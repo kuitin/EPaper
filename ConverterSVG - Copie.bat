@@ -1,0 +1,1 @@
+FOR /R svg/ %F in (*.svg) do echo %~nxF

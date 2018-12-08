@@ -7,6 +7,8 @@
 
 #define TIMELINE_TITLE "Time Line"
 
+#define WEATHER_TEMPERATUREINDOOR "Indoor: "
+
 #endif // ENGLISH
 
 class tessse {

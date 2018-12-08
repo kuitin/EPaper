@@ -6,6 +6,8 @@
 #include "svg/header/wi-day-sunny.h"
 #include "svg/header/wi-alien.h"
 
+#include "DisplayModuleCommunicationWifi.h"
+
 class DataWeather 
 {
     public:

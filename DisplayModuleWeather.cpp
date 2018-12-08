@@ -4,7 +4,7 @@
 #include "utility/BitmapExamples.h"
 #include "utility/IMG_0001.h"
 #include "utility/IMG_0002.h"
-
+#include "Trad/DisplayEPaperTrad.h"
 
 
 void DisplayModuleWeather::FillModule(GxEPD& m_GxEPD)
@@ -21,13 +21,12 @@ void DisplayModuleWeather::FillModule(GxEPD& m_GxEPD)
       m_GxEPD.setFont(f18);
       m_GxEPD.setTextColor(GxEPD_BLACK);
       m_GxEPD.drawExampleBitmap(gImage_IMG_0001, relativePos.x +90, relativePos.y + 28, 26, 24, GxEPD_BLACK);
-      m_GxEPD.drawExampleBitmap(gImage_IMG_0001, relativePos.x +90, relativePos.y + 128, 26, 24, GxEPD_BLACK);
       m_GxEPD.setCursor(relativePos.x, relativePos.y + 50 );
       m_GxEPD.println(String(m_dataWeather.TemperatureOut, 1 ) );
       
-      
-      m_GxEPD.setCursor(relativePos.x, relativePos.y + 150 );
-      m_GxEPD.println(String(m_dataWeather.TemperatureIn, 1 ) );
+      m_GxEPD.setFont(f);
+      m_GxEPD.setCursor(relativePos.x, relativePos.y + 100 );
+      m_GxEPD.println(String(WEATHER_TEMPERATUREINDOOR) + String(m_dataWeather.TemperatureIn, 1 ) + "C" );
       tImage config;
       const uint8_t* iconWeather =  weatherToIcon(DataWeather::cloud, &config);
       m_GxEPD.drawExampleBitmap(image_data_wicloudy, relativePos.x + 130, relativePos.y + 3, config.width, config.height, GxEPD_BLACK);
