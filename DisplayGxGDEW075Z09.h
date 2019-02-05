@@ -10,6 +10,7 @@ class DisplayGxGDEW075Z09 : public DisplayEPaper
 
 	void DrawModules();
 	void Init();
+	void InitWithLog(int logLevel, Print *output);
 	// void drawLine();
 	// void ModuleName();
 	// void AddModuleContent();

@@ -6,6 +6,7 @@
 #include "svg/header/wi-day-sunny.h"
 #include "svg/header/wi-alien.h"
 
+
 #include "DisplayModuleCommunicationWifi.h"
 
 class DataWeather 
@@ -33,6 +34,7 @@ class DisplayModuleWeather : public DisplayModule
     void FillModule(GxEPD& m_GxEPD);
     bool updateTimeOnly = false;
 	private :
+    std::string m_forecastURL;
     DataWeather m_dataWeather;
 
 };

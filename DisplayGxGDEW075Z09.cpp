@@ -16,6 +16,14 @@ void DisplayGxGDEW075Z09::Init()
     m_GxEPD->init();
 }
 
+void DisplayGxGDEW075Z09::InitWithLog(int logLevel, Print *output)
+{
+   // DisplayEPaper::InitWithLog(logLevel, output);
+   // LOG_DEBUG("INIT DisplayGxGDEW075Z09");
+    GxGDEW075Z09* currentcontext = reinterpret_cast<GxGDEW075Z09*>(m_GxEPD);
+    m_GxEPD->init();
+}
+
 
 void DisplayGxGDEW075Z09::DrawModules()
 {

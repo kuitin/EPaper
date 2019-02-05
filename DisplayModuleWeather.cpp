@@ -6,7 +6,6 @@
 #include "utility/IMG_0002.h"
 #include "Trad/DisplayEPaperTrad.h"
 
-
 void DisplayModuleWeather::FillModule(GxEPD& m_GxEPD)
 {
       Point relativePos = GetPosRelative();

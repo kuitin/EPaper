@@ -5,6 +5,15 @@ DisplayEPaper::DisplayEPaper(char CS, char DC, char RST)
     m_io = new GxIO_Class(SPI, CS, DC, RST); 
 }
 
+void DisplayEPaper::Init()
+{
+}
+
+// void DisplayEPaper::InitWithLog(int logLevel, Print *output)
+// {
+//     LogInterface.begin(logLevel, output);
+// }
+
 void DisplayEPaper::TestAddNewTimeLineModule()
 {
    // Date currentDate;   
@@ -17,13 +26,57 @@ void DisplayEPaper::TestAddNewTimeLineModule()
     m_modules.push_back(currentModule);
 }
 
-void DisplayEPaper::TestAddNewWeatherModule()
+void DisplayEPaper::GetServerData(String forecastURL, DataWeather& data)
 {
+       HTTPClient http;
+
+        // configure traged server and url
+        //http.begin("https://www.howsmyssl.com/a/check", ca); //HTTPS
+        http.begin(forecastURL); //HTTP
+
+        // start connection and send HTTP header
+        int httpCode = http.GET();
+
+        // httpCode will be negative on error
+        if(httpCode > 0) {
+            // HTTP header has been send and Server response header has been handled
+
+            // file found at server
+            if(httpCode == HTTP_CODE_OK) {
+                String payload = http.getString();
+                //Serial.println(payload);
+                  const size_t capacity = JSON_OBJECT_SIZE(3) + JSON_ARRAY_SIZE(2) + 60;
+                  DynamicJsonBuffer jsonBuffer(capacity);
+  
+                JsonObject& root = jsonBuffer.parseObject(payload);
+                if (!root.success()) {
+                  Serial.println(F("Parsing failed!"));
+                  return;
+                }
+                JsonArray& arrayWeather = root["list"].as<JsonArray&>();
+                double humidity = arrayWeather[0]["main"]["humidity"].as<double>();
+                data.TemperatureOut = arrayWeather[0]["main"]["temp"].as<double>() - 273.15;
+              
+                // Extract values
+                Serial.println(F("Response:"));
+                Serial.print("humidity: ");Serial.println(humidity,3);
+                Serial.print("temperature: ");Serial.println(data.TemperatureOut, 3);
+            }
+        } else {
+            Serial.printf("[HTTP] GET... failed, error: %s\n", http.errorToString(httpCode).c_str());
+        }
+
+        http.end();
+}
+
+void DisplayEPaper::TestAddNewWeatherModule(const String & forecastURL)
+{    
     DataWeather data;
     data.TemperatureIn = 20;
     data.TemperatureOut = 12;
     data.Pression = 1013;
     data.weather = DataWeather::cloud;
+    GetServerData(forecastURL, data);
     DisplayModule* currentModule = new DisplayModuleWeather(data);
     m_modules.push_back(currentModule);
 }
