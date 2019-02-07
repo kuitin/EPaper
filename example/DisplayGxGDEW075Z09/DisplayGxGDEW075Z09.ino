@@ -1,4 +1,5 @@
-#include <DisplayGxGDEW075Z09.h>
+#include <DisplayEPaper.h>
+#include <DisplayGxGDEW075Z09/DisplayGxGDEW075Z09.h>
 #include <WiFi.h>
 #include <WiFiMulti.h>
 
@@ -7,7 +8,7 @@ static const int8_t cs = 17;
 static const int8_t dc = 16;
 static const int8_t rst = 5;
 static const int8_t busy = 19;
-DisplayGxGDEW075Z09 displaya(cs,dc,rst,busy);
+EPaper_Class displaya(cs,dc,rst,busy);
 WiFiMulti wifiMulti;
 
 void setup() {

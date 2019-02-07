@@ -1,6 +1,6 @@
 #ifndef _DisplayModuleCommunicationWifi_H_
 #define _DisplayModuleCommunicationWifi_H_
-#include "DisplayModuleCommunication.h"
+#include "Modules/DisplayModuleCommunication.h"
 #include <WiFi.h>
 #include <WiFiMulti.h>
 

@@ -3,10 +3,9 @@
 
 #include <GxEPD.h>
 #include <GxIO/GxIO_SPI/GxIO_SPI.h>
-#include <DisplayModuleTimeLine.h>
-#include <DisplayModule.h>
-#include "DisplayModuleClock.h"
-#include "DisplayModuleWeather.h"
+#include <Modules/TimeLine/DisplayModuleTimeLine.h>
+#include "Modules/Clock/DisplayModuleClock.h"
+#include "Modules/Weather/DisplayModuleWeather.h"
 #include <vector>
 #define PRINT_LOG
 #include "LogInterface.h"

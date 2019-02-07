@@ -1,13 +1,13 @@
 #ifndef _DisplayModuleWeather_H_
 #define _DisplayModuleWeather_H_
-#include <DisplayModule.h>
+#include "Modules/DisplayModule.h"
 #include "svg/header/wi-cloudy.h"
 #include "svg/header/wi-hail.h"
 #include "svg/header/wi-day-sunny.h"
 #include "svg/header/wi-alien.h"
 
 
-#include "DisplayModuleCommunicationWifi.h"
+#include "Modules/DisplayModuleCommunicationWifi.h"
 
 class DataWeather 
 {

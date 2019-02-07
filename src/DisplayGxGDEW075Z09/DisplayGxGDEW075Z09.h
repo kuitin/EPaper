@@ -18,5 +18,9 @@ class DisplayGxGDEW075Z09 : public DisplayEPaper
 	
 };
 
+#ifndef EPaper_Class
+#define EPaper_Class DisplayGxGDEW075Z09
+#endif
+
 #endif // _DisplayGxGDEW075Z09_H_
 

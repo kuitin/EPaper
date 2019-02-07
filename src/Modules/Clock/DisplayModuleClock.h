@@ -1,6 +1,6 @@
 #ifndef _DisplayModuleClock_H_
 #define _DisplayModuleClock_H_
-#include <DisplayModule.h>
+#include <Modules/DisplayModule.h>
 class DisplayModuleClock : public DisplayModule 
 {
 	public:

@@ -1,4 +1,4 @@
-#include <DisplayModuleClock.h>
+#include <Modules/Clock/DisplayModuleClock.h>
 #include <Fonts/FreeMonoBold18pt7b.h>
 void DisplayModuleClock::FillModule(GxEPD& m_GxEPD)
 {

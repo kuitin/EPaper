@@ -1,4 +1,4 @@
-#include "DisplayGxGDEW075Z09.h"
+#include "DisplayGxGDEW075Z09/DisplayGxGDEW075Z09.h"
 
 // FreeFonts from Adafruit_GFX
 #include <Fonts/FreeMonoBold9pt7b.h>
