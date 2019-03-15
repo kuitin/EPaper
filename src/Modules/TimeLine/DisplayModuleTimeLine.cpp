@@ -9,12 +9,11 @@
 #define DISPLAYMODULETIMELINE_LENGTHCONTENT 20
 
 using namespace std;
-DisplayModuleTimeLine::DisplayModuleTimeLine(unsigned int date, unsigned int period, const std::vector<DateContent>& data) 
-: DisplayModule( 1,  200,  384), updateTimeOnly(true)
+DisplayModuleTimeLine::DisplayModuleTimeLine(DataViewTimeline* viewData) :
+ m_viewDatas(viewData), 
+ DisplayModule( 1,  200,  384), updateTimeOnly(true)
 {
-      m_data = data;
-      m_currentDate = date;
-      m_period = period;
+
 }
 
 

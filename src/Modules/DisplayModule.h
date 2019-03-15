@@ -10,6 +10,13 @@ class Point {
     Point& operator=(const Point &source)    {x = source.x; y = source.y; return *this; };
 };
 
+class ModuleDimmensions
+{
+    public:
+    int m_width;
+    int m_height;    
+    int m_cornerThickness;
+};
 
 
 
@@ -17,7 +24,7 @@ class DisplayModule
 {
 	public:
     explicit DisplayModule(int cornerThickness, int width, int height);
-    int GetID() const {return m_id;}
+    int GetID() const {return m_id;} // TODO : actually it is not using ...
     int GetWidth() const {return m_width;}
     int GetHeight() const {return m_height;}
     int GetThickness() const {return m_cornerThickness;}
