@@ -25,6 +25,7 @@ void DisplayGxGDEW075Z09::InitWithLog(int logLevel, Print *output)
 }
 
 
+
 void DisplayGxGDEW075Z09::DrawModules()
 {
     GxGDEW075Z09* currentcontext = reinterpret_cast<GxGDEW075Z09*>(m_GxEPD);
@@ -42,23 +43,25 @@ void DisplayGxGDEW075Z09::DrawModules()
         // currentcontext->setTextSize(5);
         // currentcontext->println("12:25");
          
-        for (auto& module : m_modules) // Problem part
+        for (ControllerModule* module : m_modules) // Problem part
         {  
-            if(GxGDEW075Z09_WIDTH < (positionNextModule.x + module->GetThickness() + module->GetWidth())) 
+            DisplayModule* currentView = module->getView();
+            if(GxGDEW075Z09_WIDTH < (positionNextModule.x + currentView->GetThickness() + currentView->GetWidth())) 
             {
                 // Change Line
-                positionNextModule.y += module->GetHeight();
+                positionNextModule.y += currentView->GetHeight();
                 positionNextModule.x = 0;
             }   
             currentcontext->setCursor(positionNextModule.x, positionNextModule.y);
-            currentcontext->drawRect(positionNextModule.x, positionNextModule.y, module->GetWidth(), module->GetHeight(), GxEPD_BLACK);
+            currentcontext->drawRect(positionNextModule.x, positionNextModule.y, currentView->GetWidth(), currentView->GetHeight(), GxEPD_BLACK);
             // Update relative position:
-            module->UpdateRelativePos(positionNextModule.x + module->GetThickness(), positionNextModule.y);
-            module->FillModule(*currentcontext);
+            currentView->UpdateRelativePos(positionNextModule.x + currentView->GetThickness(), positionNextModule.y);
+            //currentView->UpdateViewData(ModelData);
+            currentView->FillModule(*currentcontext);
 
             // Compute next position of the module
            
-            positionNextModule.x += module->GetWidth();            
+            positionNextModule.x += currentView->GetWidth();            
         }
         
         // currentcontext->fillRect(0, 0, 8, 8, GxEPD_BLACK);

@@ -17,16 +17,16 @@ void DisplayEPaper::Init()
 void DisplayEPaper::TestAddNewTimeLineModule()
 {
    // Date currentDate;   
-    std::vector<DateContent> data;
-    DateContent tempData {1540572729,"hello123456789123456777777"};
-    DateContent tempData2 {1540572729,"hello"};
-    data.push_back(tempData);
-    data.push_back(tempData2);
-    DisplayModule* currentModule = new DisplayModuleTimeLine(1537387581, 5256000, data);
-    m_modules.push_back(currentModule);
+    // std::vector<DateContent> data;
+    // DateContent tempData {1540572729,"hello123456789123456777777"};
+    // DateContent tempData2 {1540572729,"hello"};
+    // data.push_back(tempData);
+    // data.push_back(tempData2);
+    // DisplayModule* currentModule = new DisplayModuleTimeLine(1537387581, 5256000, data);
+    // m_modules.push_back(currentModule);
 }
 
-void DisplayEPaper::GetServerData(String forecastURL, DataWeather& data)
+void DisplayEPaper::GetServerData(String forecastURL, DataViewWeather& data)
 {
        HTTPClient http;
 
@@ -71,33 +71,47 @@ void DisplayEPaper::GetServerData(String forecastURL, DataWeather& data)
 
 void DisplayEPaper::TestAddNewWeatherModule(const String & forecastURL)
 {    
-    DataWeather data;
-    data.TemperatureIn = 20;
-    data.TemperatureOut = 12;
-    data.Pression = 1013;
-    data.weather = DataWeather::cloud;
-    GetServerData(forecastURL, data);
-    DisplayModule* currentModule = new DisplayModuleWeather(data);
-    m_modules.push_back(currentModule);
+    // DataViewWeather data;
+    // data.TemperatureIn = 20;
+    // data.TemperatureOut = 12;
+    // data.Pression = 1013;
+    // data.weather = DataViewWeather::cloud;
+    // GetServerData(forecastURL, data);
+    // DisplayModule* currentModule = new DisplayModuleWeather(data);
+    ControllerModuleWeather* currentModule = new ControllerModuleWeather(forecastURL);
+    AddNewModule(currentModule);
 }
 
 
 void DisplayEPaper::AddNewClockModule(int cornerThickness, int width, int height, bool updateTime)
 {
-    DisplayModule* currentModule = new DisplayModuleClock(cornerThickness, width, height, updateTime);
-    m_modules.push_back(currentModule);
+    // DisplayModule* currentModule = new DisplayModuleClock(cornerThickness, width, height, updateTime);
+    // AddNewModule(currentModule);
 }
 
 void DisplayEPaper::AddNewTimeLineModule(const std::vector<DateContent>& data)
 {
-    DisplayModule* currentModule = new DisplayModuleTimeLine(1537387581, 5256000, data);
-    m_modules.push_back(currentModule);
+    // DisplayModule* currentModule = new DisplayModuleTimeLine(1537387581, 5256000, data);
+    // AddNewModule(currentModule);
 }
 
-void DisplayEPaper::AddNewModule(DisplayModule* currentModule)
+void DisplayEPaper::AddNewModule(ControllerModule* currentModule)
 {
 	m_modules.push_back(currentModule);
 }
 
+void DisplayEPaper::UpdateAllDatas()
+{
+    for (ControllerModule* module : m_modules) // Problem part
+    {
+        module->UpdateData();
+    }
+}
 
-
+void DisplayEPaper::UpdateAllViewwDatas()
+{
+    for (ControllerModule* module : m_modules) // Problem part
+    {
+        module->UpdateDataView();
+    }
+}

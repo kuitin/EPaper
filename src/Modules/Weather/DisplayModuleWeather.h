@@ -9,7 +9,7 @@
 
 #include "Modules/DisplayModuleCommunicationWifi.h"
 
-class DataWeather 
+class DataViewWeather 
 {
     public:
     enum IconWeater
@@ -29,13 +29,14 @@ class DataWeather
 class DisplayModuleWeather : public DisplayModule 
 {
 	public:
-    DisplayModuleWeather(DataWeather dataWeather ) :  DisplayModule( 1,  225,  200), m_dataWeather(dataWeather){};
-    const uint8_t* weatherToIcon(DataWeather::IconWeater value, tImage * config);
+    DisplayModuleWeather(DataViewWeather* dataViewWeather ) :  DisplayModule( 1,  225,  200), m_dataViewWeather(dataViewWeather){};
+    const uint8_t* weatherToIcon(DataViewWeather::IconWeater value, tImage * config);
     void FillModule(GxEPD& m_GxEPD);
+    void updateViewData();
     bool updateTimeOnly = false;
 	private :
     std::string m_forecastURL;
-    DataWeather m_dataWeather;
+    DataViewWeather* m_dataViewWeather;
 
 };
 

@@ -11,6 +11,7 @@
 #include "LogInterface.h"
 #include <HTTPClient.h>
 #include <ArduinoJson.h>
+#include "Modules/Weather/ControllerModuleWeather.h"
 
 class DisplayEPaper 
 {
@@ -18,20 +19,22 @@ class DisplayEPaper
 	DisplayEPaper(char CS, char DC, char RST);
 	virtual void Init();
 	//virtual void InitWithLog(int logLevel, Print *output);
-	virtual void AddNewModule(DisplayModule* currentModule);
+	virtual void AddNewModule(ControllerModule* currentModule);
 	virtual void TestAddNewTimeLineModule();
 	virtual void TestAddNewWeatherModule(const String & forecastURL);
 	virtual	void AddNewClockModule(int cornerThickness, int width, int height,bool updateTime);
 	virtual void AddNewTimeLineModule(const std::vector<DateContent>& data);
 	virtual void DrawModules() = 0;
+	virtual void UpdateAllDatas();
+	virtual void UpdateAllViewwDatas();
 
 	private:
-	virtual void GetServerData(String forecastURL, DataWeather& data);
+	virtual void GetServerData(String forecastURL, DataViewWeather& data);
 
 	protected :
 	GxEPD* m_GxEPD;
 	GxIO_Class* m_io;
-	std::vector<DisplayModule*> m_modules;
+	std::vector<ControllerModule*> m_modules;
 };
 
 #endif
