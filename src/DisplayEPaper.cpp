@@ -29,7 +29,8 @@ void DisplayEPaper::TestAddNewWeatherModule(const String & forecastURL)
 
 void DisplayEPaper::AddNewClockModule(int cornerThickness, int width, int height, bool updateTime)
 {
-    ControllerModuleClock* currentModule = new ControllerModuleClock(cornerThickness, width, height, updateTime);
+    ControllerModuleClock* currentModule = new ControllerModuleClock(
+                                            ModuleDimmensions(cornerThickness, width, height), updateTime);
     AddNewModule(currentModule);
 }
 

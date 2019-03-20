@@ -13,6 +13,8 @@ class Point {
 class ModuleDimmensions
 {
     public:
+    ModuleDimmensions(int width, int height, int cornerThickness):
+    m_width(width), m_height(height), m_cornerThickness(cornerThickness){};
     int m_width;
     int m_height;    
     int m_cornerThickness;
@@ -23,11 +25,11 @@ class ModuleDimmensions
 class DisplayModule 
 {
 	public:
-    explicit DisplayModule(int cornerThickness, int width, int height);
+    explicit DisplayModule(const ModuleDimmensions & dimensions);
     int GetID() const {return m_id;} // TODO : actually it is not using ...
-    int GetWidth() const {return m_width;}
-    int GetHeight() const {return m_height;}
-    int GetThickness() const {return m_cornerThickness;}
+    int GetWidth() const {return m_dimensions.m_width;}
+    int GetHeight() const {return m_dimensions.m_height;}
+    int GetThickness() const {return m_dimensions.m_cornerThickness;}
     Point GetPosRelative() const {return m_positionRelative;}
     void UpdateRelativePos(int posX, int posY){m_positionRelative = Point(posX, posY);}
     virtual void FillModule(GxEPD&) = 0;
@@ -35,9 +37,7 @@ class DisplayModule
 	// void drawLine();
 	// void ModuleName(int cornerWidth);
 	protected:
-    int m_width;
-    int m_height;    
-    int m_cornerThickness;
+    ModuleDimmensions m_dimensions;
     int m_id;
 
     private:

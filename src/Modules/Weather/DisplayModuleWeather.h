@@ -29,7 +29,7 @@ class DataViewWeather
 class DisplayModuleWeather : public DisplayModule 
 {
 	public:
-    DisplayModuleWeather(DataViewWeather* dataViewWeather ) :  DisplayModule( 1,  225,  200), m_dataViewWeather(dataViewWeather){};
+    DisplayModuleWeather(DataViewWeather* dataViewWeather ) :  DisplayModule( ModuleDimmensions(1,  225,  200)), m_dataViewWeather(dataViewWeather){};
     const uint8_t* weatherToIcon(DataViewWeather::IconWeater value, tImage * config);
     void FillModule(GxEPD& m_GxEPD);
     void updateViewData();

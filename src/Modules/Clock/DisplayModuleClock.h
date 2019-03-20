@@ -7,7 +7,8 @@
 class DisplayModuleClock : public DisplayModule 
 {
 	public:
-    DisplayModuleClock(int cornerThickness, int width, int height, bool updateTime) : DisplayModule( cornerThickness,  width,  height), updateTimeOnly(updateTime){};
+    DisplayModuleClock(const ModuleDimmensions & dimensions, bool updateTime) : 
+    DisplayModule( dimensions ), updateTimeOnly(updateTime){};
     void FillModule(GxEPD& m_GxEPD);
     bool updateTimeOnly = false;
 

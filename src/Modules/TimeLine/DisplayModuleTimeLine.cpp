@@ -11,7 +11,7 @@
 using namespace std;
 DisplayModuleTimeLine::DisplayModuleTimeLine(DataViewTimeline* viewData) :
  m_viewDatas(viewData), 
- DisplayModule( 1,  200,  384), updateTimeOnly(true)
+ DisplayModule( ModuleDimmensions(1,  200,  384) ), updateTimeOnly(true)
 {
 
 }
@@ -21,7 +21,7 @@ void DisplayModuleTimeLine::FillModule(GxEPD& m_GxEPD)
 {
       Point relativePos = GetPosRelative();
       
-      m_GxEPD.drawLine(relativePos.x + DISPLAYMODULETIMELINE_LINEPOS_X, 0, relativePos.x + DISPLAYMODULETIMELINE_LINEPOS_X, m_height, GxEPD_BLACK);
+      m_GxEPD.drawLine(relativePos.x + DISPLAYMODULETIMELINE_LINEPOS_X, 0, relativePos.x + DISPLAYMODULETIMELINE_LINEPOS_X, GetHeight(), GxEPD_BLACK);
 
       // Get all event in a period
       std::vector<DateContent> dataInPeriod;
@@ -38,9 +38,9 @@ void DisplayModuleTimeLine::FillModule(GxEPD& m_GxEPD)
       int eventCount = dataInPeriod.size();
       unsigned int dateFirstEvent = dataInPeriod.at( 0 ).date;
       unsigned int dateLastEvent = dataInPeriod.at( eventCount - 1 ).date;
-      unsigned int maxEvent = m_height / DISPLAYMODULETIMELINE_HIGHTPIXELLETTER;
+      unsigned int maxEvent = GetHeight() / DISPLAYMODULETIMELINE_HIGHTPIXELLETTER;
       
-      unsigned int gridUnit = m_height / eventCount;
+      unsigned int gridUnit = GetHeight() / eventCount;
       const GFXfont* f = &FreeSans9pt7b;
       m_GxEPD.setFont(f);
       m_GxEPD.setTextColor(GxEPD_BLACK);
