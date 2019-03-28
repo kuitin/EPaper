@@ -9,6 +9,15 @@ ControllerModuleTimeline::ControllerModuleTimeline () :
     m_view = new DisplayModuleTimeLine(m_dataView);
 }
 
+ControllerModuleTimeline::~ControllerModuleTimeline()
+{
+    if(m_dataView)
+    {
+        delete m_dataView;
+        m_dataView = nullptr;
+    }
+}
+
 
 void ControllerModuleTimeline::UpdateData()
 {

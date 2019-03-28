@@ -5,15 +5,19 @@
 class ControllerModule 
 {
 	public:
-    explicit ControllerModule() {};
-    virtual void UpdateData();
-    virtual void UpdateDataView();
+    explicit ControllerModule() {}
+    ~ControllerModule();
+    virtual void UpdateData() {}
+    virtual void UpdateDataView() {}
     DisplayModule* getView() {return m_view;}
     //bool isNewData() const {return m_newdata;}
+
+
 
     protected:
     DisplayModule* m_view;
     bool m_newData;
+
 
 
 };

@@ -9,6 +9,7 @@ class ControllerModuleTimeline : public ControllerModule
 {
 	public:
     ControllerModuleTimeline() ;
+    ~ControllerModuleTimeline();
     void UpdateData();
     void UpdateDataView();
 

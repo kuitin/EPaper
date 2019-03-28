@@ -9,6 +9,7 @@ class ControllerModuleClock : public ControllerModule
 {
 	public:
     ControllerModuleClock(const ModuleDimmensions & dimensions, bool updateTime) ;
+    ~ControllerModuleClock(){}
     void UpdateData();
     void UpdateDataView();
 

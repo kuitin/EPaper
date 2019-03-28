@@ -11,9 +11,10 @@ class ControllerModuleWeather : public ControllerModule
     ControllerModuleWeather(const String & forecastURL) ;
     void UpdateData();
     void UpdateDataView();
+    ~ControllerModuleWeather();
 
 	private :
-    void GetServerData(String forecastURL, DataViewWeather& data);
+    void GetServerData(String forecastURL);
     String m_forecastURL;
     DataViewWeather* m_dataWeather;
     bool m_flagNeedUpdate;

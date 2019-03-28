@@ -10,8 +10,16 @@ ControllerModuleWeather::ControllerModuleWeather (const String & forecastURL) :
     m_view = new DisplayModuleWeather(m_dataWeather);
 }
 
+ControllerModuleWeather::~ControllerModuleWeather()
+{
+    if(m_dataWeather)
+    {
+        delete m_dataWeather;
+        m_dataWeather = nullptr;
+    }
+}
 
-void ControllerModuleWeather::GetServerData(String forecastURL, DataViewWeather& data)
+void ControllerModuleWeather::GetServerData(String forecastURL)
 {
        HTTPClient http;
 
@@ -40,12 +48,12 @@ void ControllerModuleWeather::GetServerData(String forecastURL, DataViewWeather&
                 }
                 JsonArray& arrayWeather = root["list"].as<JsonArray&>();
                 double humidity = arrayWeather[0]["main"]["humidity"].as<double>();
-                data.TemperatureOut = arrayWeather[0]["main"]["temp"].as<double>() - 273.15;
+                m_dataWeather->TemperatureOut = arrayWeather[0]["main"]["temp"].as<double>() - 273.15;
               
                 // Extract values
                 Serial.println(F("Response:"));
                 Serial.print("humidity: ");Serial.println(humidity,3);
-                Serial.print("temperature: ");Serial.println(data.TemperatureOut, 3);
+                Serial.print("temperature: ");Serial.println(m_dataWeather->TemperatureOut, 3);
             }
         } else {
             Serial.printf("[HTTP] GET... failed, error: %s\n", http.errorToString(httpCode).c_str());
@@ -60,7 +68,7 @@ void ControllerModuleWeather::UpdateData()
     m_dataWeather->TemperatureOut = 12;
     m_dataWeather->Pression = 1013;
     m_dataWeather->weather = DataViewWeather::cloud;
-    GetServerData(m_forecastURL, *m_dataWeather);
+    GetServerData(m_forecastURL);
 }
 
 void ControllerModuleWeather::UpdateDataView()
