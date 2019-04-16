@@ -36,7 +36,11 @@ void loop() {
   displaya.TestAddNewWeatherModule("http://api.openweathermap.org/data/2.5/forecast?id=YOURCITY&APPID=YOURTOKENID");
   Serial.println("Compute pixel position for Clock");
   displaya.AddNewClockModule(1,100,100, false);
-
+	
+   // Update all data fo each module
+   displaya.UpdateAllDatas();
+   
+   // Update View
   Serial.println("Refresh E-paper view");
   displaya.DrawModules();
 
