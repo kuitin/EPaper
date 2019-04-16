@@ -27,7 +27,7 @@ void ControllerModuleTimeline::UpdateData()
     m_dataView->listEvent.push_back(tempData);
     m_dataView->listEvent.push_back(tempData2);
     m_dataView->currentDate = 1537387581;
-    m_dataView->currentDate = 5256000;
+    m_dataView->period = 5256000;
 }
 
 void ControllerModuleTimeline::UpdateDataView()

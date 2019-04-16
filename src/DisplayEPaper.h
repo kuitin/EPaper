@@ -26,6 +26,7 @@ class DisplayEPaper
 	virtual void DrawModules() = 0;
 	virtual void UpdateAllDatas();
 	virtual void UpdateAllViewwDatas();
+	virtual bool NeedUpdateScreen();
 
 	private:
 

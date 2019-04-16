@@ -27,9 +27,6 @@ class DisplayModuleTimeLine : public DisplayModule
     
 	private :
     DataViewTimeline* m_viewDatas;
-    std::vector<DateContent> m_data;
-    unsigned int m_currentDate = 0;
-    unsigned int m_period = 0;
     String makeTime(unsigned long timestamp );
 
 };

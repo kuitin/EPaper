@@ -11,7 +11,7 @@
 using namespace std;
 DisplayModuleTimeLine::DisplayModuleTimeLine(DataViewTimeline* viewData) :
  m_viewDatas(viewData), 
- DisplayModule( ModuleDimmensions(1,  200,  384) ), updateTimeOnly(true)
+ DisplayModule( ModuleDimmensions(200,  384, 1) ), updateTimeOnly(true)
 {
 
 }
@@ -25,29 +25,35 @@ void DisplayModuleTimeLine::FillModule(GxEPD& m_GxEPD)
 
       // Get all event in a period
       std::vector<DateContent> dataInPeriod;
-      for ( int itrData=0; itrData < m_data.size(); itrData ++ )
+      for ( int itrData=0; itrData <  m_viewDatas->listEvent.size(); itrData ++ )
       {
-            DateContent currentData = m_data.at(itrData);
-            if ( currentData.date < m_period + m_currentDate && currentData.date > m_currentDate - DISPLAYMODULETIMELINE_12HOURTOSEC )
+            DateContent currentData =  m_viewDatas->listEvent.at(itrData);
+            if ( currentData.date < m_viewDatas->period + m_viewDatas->currentDate && currentData.date > m_viewDatas->currentDate - DISPLAYMODULETIMELINE_12HOURTOSEC )
             {
                   dataInPeriod.push_back(currentData);
             }
       }      
 
-      //Get number of event to display
-      int eventCount = dataInPeriod.size();
-      unsigned int dateFirstEvent = dataInPeriod.at( 0 ).date;
-      unsigned int dateLastEvent = dataInPeriod.at( eventCount - 1 ).date;
-      unsigned int maxEvent = GetHeight() / DISPLAYMODULETIMELINE_HIGHTPIXELLETTER;
-      
-      unsigned int gridUnit = GetHeight() / eventCount;
       const GFXfont* f = &FreeSans9pt7b;
       m_GxEPD.setFont(f);
       m_GxEPD.setTextColor(GxEPD_BLACK);
       m_GxEPD.setTextSize(1);
       // Display Module Title
-       m_GxEPD.setCursor(relativePos.x + DISPLAYMODULETIMELINE_LINEPOS_X, DISPLAYMODULETIMELINE_HIGHTPIXELLETTER);
+      m_GxEPD.setCursor(relativePos.x + DISPLAYMODULETIMELINE_LINEPOS_X, DISPLAYMODULETIMELINE_HIGHTPIXELLETTER);
       m_GxEPD.println(TIMELINE_TITLE);
+
+      //Get number of event to display
+      int eventCount = dataInPeriod.size();
+      // If nothing to display, no event, so no need to do anything.
+      if(eventCount == 0)
+      return;
+
+      unsigned int dateFirstEvent = dataInPeriod.at( 0 ).date;
+      unsigned int dateLastEvent = dataInPeriod.at( eventCount - 1 ).date;
+      unsigned int maxEvent = GetHeight() / DISPLAYMODULETIMELINE_HIGHTPIXELLETTER;
+      
+      unsigned int gridUnit = GetHeight() / eventCount;
+
       int deltaStart = DISPLAYMODULETIMELINE_HIGHTPIXELLETTER + 5;
       for ( int itrData=0; itrData < dataInPeriod.size(); itrData ++ )
       {

@@ -30,7 +30,7 @@ void DisplayEPaper::TestAddNewWeatherModule(const String & forecastURL)
 void DisplayEPaper::AddNewClockModule(int cornerThickness, int width, int height, bool updateTime)
 {
     ControllerModuleClock* currentModule = new ControllerModuleClock(
-                                            ModuleDimmensions(cornerThickness, width, height), updateTime);
+                                            ModuleDimmensions(width, height, cornerThickness), updateTime);
     AddNewModule(currentModule);
 }
 
@@ -53,4 +53,15 @@ void DisplayEPaper::UpdateAllViewwDatas()
     {
         module->UpdateDataView();
     }
+}
+
+bool DisplayEPaper::NeedUpdateScreen()
+{
+    bool needUpdate = false;
+    for (ControllerModule* module : m_modules) // Problem part
+    {
+        needUpdate |= module->NeedUpdate();
+        module->ResetFlagNewData();
+    }
+    return needUpdate;
 }
