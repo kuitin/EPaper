@@ -27,27 +27,27 @@ void DisplayModuleWeather::FillModule(GxEPD& m_GxEPD)
       m_GxEPD.setCursor(relativePos.x, relativePos.y + 100 );
       m_GxEPD.println(String(WEATHER_TEMPERATUREINDOOR) + String(m_dataViewWeather->TemperatureIn, 1 ) + "C" );
       tImage config;
-      const uint8_t* iconWeather =  weatherToIcon(DataViewWeather::cloud, &config);
+      const uint8_t* iconWeather =  weatherToIcon(IconWeatherImage::cloud, &config);
       m_GxEPD.drawExampleBitmap(image_data_wicloudy, relativePos.x + 130, relativePos.y + 3, config.width, config.height, GxEPD_BLACK);
       
       
 }
 
-const uint8_t* DisplayModuleWeather::weatherToIcon(DataViewWeather::IconWeater value, tImage * config)
+const uint8_t* DisplayModuleWeather::weatherToIcon(IconWeatherImage::IconWeater value, tImage * config)
 {
       switch(value)
       {
-            case DataViewWeather::cloud:
+            case IconWeatherImage::cloud:
                   *config = wicloudy;
                   return image_data_wicloudy;
             break;
 
-            case DataViewWeather::rain:
+            case IconWeatherImage::rain:
                   *config = wihail;
                   return image_data_wihail;
             break;
 
-            case DataViewWeather::sun:
+            case IconWeatherImage::sun:
                   *config = widaysunny;
                   return image_data_widaysunny;
             break;

@@ -5,11 +5,12 @@
 #include "svg/header/wi-hail.h"
 #include "svg/header/wi-day-sunny.h"
 #include "svg/header/wi-alien.h"
-
+#include <Modules/Utils/UtilTime.h>
 
 #include "Modules/DisplayModuleCommunicationWifi.h"
 
-class DataViewWeather 
+#define MAX_DAY_WEATHER 5
+class IconWeatherImage 
 {
     public:
     enum IconWeater
@@ -18,10 +19,27 @@ class DataViewWeather
         rain,
         sun
     };
+};
+
+class DataViewWeatherOfFullDay 
+{
+ public:
+    double TemperatureMin;
+    double TemperatureMax;
+    IconWeatherImage::IconWeater weatherMorning;
+    IconWeatherImage::IconWeater weatherAfternoon;
+    DAY_OF_WEEK DayOfWeek;
+};
+
+class DataViewWeather 
+{
+    public:
+    DataViewWeather() {}
     double TemperatureIn;
     double TemperatureOut;
     double Pression;
-    IconWeater weather;
+    IconWeatherImage::IconWeater weather;
+    DataViewWeatherOfFullDay weekWeather [MAX_DAY_WEATHER];
     
 };
 
@@ -30,7 +48,7 @@ class DisplayModuleWeather : public DisplayModule
 {
 	public:
     DisplayModuleWeather(DataViewWeather* dataViewWeather ) :  DisplayModule( ModuleDimmensions(225,  200, 1)), m_dataViewWeather(dataViewWeather){};
-    const uint8_t* weatherToIcon(DataViewWeather::IconWeater value, tImage * config);
+    const uint8_t* weatherToIcon(IconWeatherImage::IconWeater value, tImage * config);
     void FillModule(GxEPD& m_GxEPD);
     void updateViewData();
     bool updateTimeOnly = false;

@@ -18,6 +18,8 @@ class ControllerModuleWeather : public ControllerModule
     String m_forecastURL;
     DataViewWeather* m_dataWeather;
     bool m_flagNeedUpdate;
+    IconWeatherImage::IconWeater IconCodeToIconImg(String iconTable);
+    void CollectWeatherOfWeek(JsonArray& array);
 
 };
 
