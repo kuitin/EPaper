@@ -79,13 +79,13 @@ void ControllerModuleWeather::CollectWeatherOfWeek(JsonArray& array)
     int FirstYear, FirstMonth, FirstDay, FirstHour, Minute, Second ;
     sscanf(array[0]["dt_txt"].as<char*>(), "%d-%d-%d %d:%d:%d", &FirstYear, &FirstMonth, &FirstDay, &FirstHour, &Minute, &Second);
     int itrDay = -1;
-    //Serial.printf("FirstDay= %d; FirstHour=%d\n",  FirstDay, FirstHour);
+    // Serial.printf("FirstDay= %d; FirstHour=%d\n",  FirstDay, FirstHour);
     double lastDay = 0;
-    //Serial.printf(" lastDay=%f; itrDay=%i\n",  lastDay, itrDay);
+    // Serial.printf(" lastDay=%f; itrDay=%i\n",  lastDay, itrDay);
     for(JsonVariant currentJson : array) {   
         int Year , Month, Day, Hour ;    
         sscanf(currentJson["dt_txt"].as<char*>(), "%d-%d-%d %d:%d:%d", &Year, &Month, &Day, &Hour, &Minute, &Second);
-        //Serial.printf("Day= %d; Hour=%d\n",  Day, Hour);
+        // Serial.printf("Day= %d; Hour=%d\n",  Day, Hour);
         if (Hour <= 8 || Hour >= 20)
         {
             // We don't care about the weather during the night.
@@ -94,7 +94,8 @@ void ControllerModuleWeather::CollectWeatherOfWeek(JsonArray& array)
         if (Day != lastDay) 
         {            
             itrDay = itrDay + 1;
-           // Serial.printf("Day= %d; lastDay=%f; itrDay=%i\n",  Day, lastDay, itrDay);
+            if(itrDay >= MAX_DAY_WEATHER) break;
+            //Serial.printf("Day= %d; lastDay=%f; itrDay=%i\n",  Day, lastDay, itrDay);
             m_dataWeather->weekWeather[itrDay].DayOfWeek = UtilTime::dayOfWeek(Year, Month, Day);
             m_dataWeather->weekWeather[itrDay].TemperatureMin   = atof(currentJson["main"]["temp"].as<char*>()) - 273.15;
             m_dataWeather->weekWeather[itrDay].TemperatureMax   = atof(currentJson["main"]["temp"].as<char*>()) - 273.15;
@@ -112,16 +113,16 @@ void ControllerModuleWeather::CollectWeatherOfWeek(JsonArray& array)
             // Since we don't want an icon from the start of the day (in the middle of the night)
             // we update the icon as long as it's somewhere during the day.
             if ( Hour <= 12 ) {
+                // Serial.printf(" icon m =%s\n",  currentJson["weather"][0]["icon"].as<char*>());
                 m_dataWeather->weekWeather[itrDay].weatherMorning   = IconCodeToIconImg(currentJson["weather"][0]["icon"].as<char*>());
             }
             else
             {
+                // Serial.printf(" icon a =%s\n",  currentJson["weather"][0]["icon"].as<char*>());
                 m_dataWeather->weekWeather[itrDay].weatherAfternoon   = IconCodeToIconImg(currentJson["weather"][0]["icon"].as<char*>());
             }
             
-        }
-
-        if((itrDay + 1) >= MAX_DAY_WEATHER) break;
+        }        
     }
 }
 
