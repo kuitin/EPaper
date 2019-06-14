@@ -78,42 +78,46 @@ void ControllerModuleWeather::CollectWeatherOfWeek(JsonArray& array)
 {
     int FirstYear, FirstMonth, FirstDay, FirstHour, Minute, Second ;
     sscanf(array[0]["dt_txt"].as<char*>(), "%d-%d-%d %d:%d:%d", &FirstYear, &FirstMonth, &FirstDay, &FirstHour, &Minute, &Second);
-    int itrDay = 0;
+    int itrDay = -1;
     Serial.printf("FirstDay= %d; FirstHour=%d\n",  FirstDay, FirstHour);
+    double lastDay = -1;
     for(JsonVariant currentJson : array) {   
         int Year , Month, Day, Hour ;    
         sscanf(currentJson["dt_txt"].as<char*>(), "%d-%d-%d %d:%d:%d", &Year, &Month, &Day, &Hour, &Minute, &Second);
         Serial.printf("Day= %d; FirstHour=%d\n",  Day, FirstHour);
-        if( FirstHour > 9 &&  FirstYear == Year && 
-            FirstMonth == Month && FirstDay == Day)
+        if (Hour <= 8 || Hour >= 20)
         {
-           // La matinée est terminée on passe à la journée d'après.
+            // We don't care about the weather during the night.
             continue;
-        }     
-        if(Hour == 9 || Hour == 15)
+        }
+        if (Day != lastDay) 
         {
+            itrDay ++;
             m_dataWeather->weekWeather[itrDay].DayOfWeek = UtilTime::dayOfWeek(Year, Month, Day);
+            m_dataWeather->weekWeather[itrDay].TemperatureMin   = atof(currentJson["main"]["temp"].as<char*>()) - 273.15;
+            m_dataWeather->weekWeather[itrDay].TemperatureMax   = atof(currentJson["main"]["temp"].as<char*>()) - 273.15;
+            m_dataWeather->weekWeather[itrDay].weatherMorning   =  IconWeatherImage::unkonwn;
+            m_dataWeather->weekWeather[itrDay].weatherAfternoon =  IconWeatherImage::unkonwn;
+			lastDay = Day;
+        } else 
+        {
+            m_dataWeather->weekWeather[itrDay].TemperatureMin   =   (atof(currentJson["main"]["temp"].as<char*>()) - 273.15) < m_dataWeather->weekWeather[itrDay].TemperatureMin ?
+                                                                    (atof(currentJson["main"]["temp"].as<char*>()) - 273.15) : m_dataWeather->weekWeather[itrDay].TemperatureMin ;
             
-             
-            if(Hour == 9)
-            {
-                Serial.printf(" m_dataWeather->weekWeather[itrDay].DayOfWeek %s\n",  currentJson["main"]["temp"].as<char*>());
-                m_dataWeather->weekWeather[itrDay].TemperatureMin   = atof(currentJson["main"]["temp"].as<char*>()) - 273.15;
-                Serial.printf(" m_dataWeather->weekWeather[itrDay].TemperatureMin %f\n",  m_dataWeather->weekWeather[itrDay].TemperatureMin);
-            }
-            else 
-            {
-                m_dataWeather->weekWeather[itrDay].TemperatureMax   = atof(currentJson["main"]["temp"].as<char*>()) - 273.15;
-            }
-            if(Hour == 9)
+            m_dataWeather->weekWeather[itrDay].TemperatureMax   =   (atof(currentJson["main"]["temp"].as<char*>()) - 273.15) > m_dataWeather->weekWeather[itrDay].TemperatureMax ?
+                                                                    (atof(currentJson["main"]["temp"].as<char*>()) - 273.15) : m_dataWeather->weekWeather[itrDay].TemperatureMax;
+
+            // Since we don't want an icon from the start of the day (in the middle of the night)
+            // we update the icon as long as it's somewhere during the day.
+            if ( Hour <= 12 ) {
                 m_dataWeather->weekWeather[itrDay].weatherMorning   = IconCodeToIconImg(currentJson["weather"][0]["icon"].as<char*>());
-            else 
+            }
+            else
             {
-                m_dataWeather->weekWeather[itrDay].weatherAfternoon =  IconCodeToIconImg(currentJson["weather"][0]["icon"].as<char*>());
-                itrDay++;
+                m_dataWeather->weekWeather[itrDay].weatherAfternoon   = IconCodeToIconImg(currentJson["weather"][0]["icon"].as<char*>());
             }
             
-        }   
+        }
 
         if(itrDay >= MAX_DAY_WEATHER) break;
     }

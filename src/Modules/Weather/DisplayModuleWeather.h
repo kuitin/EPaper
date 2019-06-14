@@ -17,7 +17,8 @@ class IconWeatherImage
     {
         cloud,
         rain,
-        sun
+        sun,
+        unkonwn
     };
 };
 
