@@ -5,6 +5,12 @@
 #include "svg/header/wi-hail.h"
 #include "svg/header/wi-day-sunny.h"
 #include "svg/header/wi-alien.h"
+
+#include "svg/headerLowDef/wi-cloudy.h"
+#include "svg/headerLowDef/wi-hail.h"
+#include "svg/headerLowDef/wi-day-sunny.h"
+#include "svg/headerLowDef/wi-alien.h"
+
 #include <Modules/Utils/UtilTime.h>
 
 #include "Modules/DisplayModuleCommunicationWifi.h"
@@ -18,6 +24,7 @@ class IconWeatherImage
         cloud,
         rain,
         sun,
+        none,
         unkonwn
     };
 };
@@ -48,8 +55,8 @@ class DataViewWeather
 class DisplayModuleWeather : public DisplayModule 
 {
 	public:
-    DisplayModuleWeather(DataViewWeather* dataViewWeather ) :  DisplayModule( ModuleDimmensions(225,  230, 1)), m_dataViewWeather(dataViewWeather){};
-    const uint8_t* weatherToIcon(IconWeatherImage::IconWeater value, tImage * config);
+    DisplayModuleWeather(DataViewWeather* dataViewWeather ) :  DisplayModule( ModuleDimmensions(225,  245, 1)), m_dataViewWeather(dataViewWeather){};
+    const uint8_t* weatherToIcon(IconWeatherImage::IconWeater value, tImage * config, bool lowDef = false);
     void FillModule(GxEPD& m_GxEPD);
     void updateViewData();
     bool updateTimeOnly = false;

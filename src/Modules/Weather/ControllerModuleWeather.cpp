@@ -79,27 +79,29 @@ void ControllerModuleWeather::CollectWeatherOfWeek(JsonArray& array)
     int FirstYear, FirstMonth, FirstDay, FirstHour, Minute, Second ;
     sscanf(array[0]["dt_txt"].as<char*>(), "%d-%d-%d %d:%d:%d", &FirstYear, &FirstMonth, &FirstDay, &FirstHour, &Minute, &Second);
     int itrDay = -1;
-    Serial.printf("FirstDay= %d; FirstHour=%d\n",  FirstDay, FirstHour);
-    double lastDay = -1;
+    //Serial.printf("FirstDay= %d; FirstHour=%d\n",  FirstDay, FirstHour);
+    double lastDay = 0;
+    //Serial.printf(" lastDay=%f; itrDay=%i\n",  lastDay, itrDay);
     for(JsonVariant currentJson : array) {   
         int Year , Month, Day, Hour ;    
         sscanf(currentJson["dt_txt"].as<char*>(), "%d-%d-%d %d:%d:%d", &Year, &Month, &Day, &Hour, &Minute, &Second);
-        Serial.printf("Day= %d; FirstHour=%d\n",  Day, FirstHour);
+        //Serial.printf("Day= %d; Hour=%d\n",  Day, Hour);
         if (Hour <= 8 || Hour >= 20)
         {
             // We don't care about the weather during the night.
             continue;
         }
         if (Day != lastDay) 
-        {
-            itrDay ++;
+        {            
+            itrDay = itrDay + 1;
+           // Serial.printf("Day= %d; lastDay=%f; itrDay=%i\n",  Day, lastDay, itrDay);
             m_dataWeather->weekWeather[itrDay].DayOfWeek = UtilTime::dayOfWeek(Year, Month, Day);
             m_dataWeather->weekWeather[itrDay].TemperatureMin   = atof(currentJson["main"]["temp"].as<char*>()) - 273.15;
             m_dataWeather->weekWeather[itrDay].TemperatureMax   = atof(currentJson["main"]["temp"].as<char*>()) - 273.15;
-            m_dataWeather->weekWeather[itrDay].weatherMorning   =  IconWeatherImage::unkonwn;
-            m_dataWeather->weekWeather[itrDay].weatherAfternoon =  IconWeatherImage::unkonwn;
+            m_dataWeather->weekWeather[itrDay].weatherMorning   =  IconWeatherImage::none;
+            m_dataWeather->weekWeather[itrDay].weatherAfternoon =  IconWeatherImage::none;
 			lastDay = Day;
-        } else 
+        }else 
         {
             m_dataWeather->weekWeather[itrDay].TemperatureMin   =   (atof(currentJson["main"]["temp"].as<char*>()) - 273.15) < m_dataWeather->weekWeather[itrDay].TemperatureMin ?
                                                                     (atof(currentJson["main"]["temp"].as<char*>()) - 273.15) : m_dataWeather->weekWeather[itrDay].TemperatureMin ;
@@ -119,7 +121,7 @@ void ControllerModuleWeather::CollectWeatherOfWeek(JsonArray& array)
             
         }
 
-        if(itrDay >= MAX_DAY_WEATHER) break;
+        if((itrDay + 1) >= MAX_DAY_WEATHER) break;
     }
 }
 

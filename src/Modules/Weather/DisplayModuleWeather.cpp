@@ -33,10 +33,21 @@ void DisplayModuleWeather::FillModule(GxEPD& m_GxEPD)
       // Display weather of the weekWeather
       for (int itrDay = 0; itrDay < MAX_DAY_WEATHER ; itrDay ++ )
       {
-            m_GxEPD.setCursor(relativePos.x, relativePos.y + 130 + itrDay*20);
-            const uint8_t* iconWeatherTemp =  weatherToIcon(m_dataViewWeather->weekWeather[itrDay].weatherMorning, &config);
-            m_GxEPD.drawExampleBitmap(iconWeatherTemp, relativePos.x + 20, relativePos.y + 130 + itrDay*20, 
-                                      5, 5, GxEPD_BLACK);
+            m_GxEPD.setCursor(relativePos.x, relativePos.y + 130 + itrDay*25);
+            if(m_dataViewWeather->weekWeather[itrDay].weatherMorning != IconWeatherImage::none)
+            {
+                  tImage configMorning;
+                  const uint8_t* iconWeatherMorning = weatherToIcon(m_dataViewWeather->weekWeather[itrDay].weatherMorning, &configMorning, true);
+                  m_GxEPD.drawExampleBitmap(iconWeatherMorning, relativePos.x + 40, relativePos.y + 110 + itrDay*25, 
+                                          configMorning.width, configMorning.height, GxEPD_BLACK);
+            }
+            if(m_dataViewWeather->weekWeather[itrDay].weatherAfternoon != IconWeatherImage::none)
+            {
+                  tImage configAfternoon;
+                  const uint8_t* iconWeatherAfternoon = weatherToIcon(m_dataViewWeather->weekWeather[itrDay].weatherAfternoon, &configAfternoon, true);
+                  m_GxEPD.drawExampleBitmap(iconWeatherAfternoon, relativePos.x + 75, relativePos.y + 110 + itrDay*25, 
+                                            configAfternoon.width, configAfternoon.height, GxEPD_BLACK);
+            }
             m_GxEPD.println(String(UtilTime::getDayOfWeekStr(m_dataViewWeather->weekWeather[itrDay].DayOfWeek)) + "       " +
                       String(m_dataViewWeather->weekWeather[itrDay].TemperatureMax, 1 ) + "  " +
                       String(m_dataViewWeather->weekWeather[itrDay].TemperatureMin, 1 )  );
@@ -46,28 +57,56 @@ void DisplayModuleWeather::FillModule(GxEPD& m_GxEPD)
       
 }
 
-const uint8_t* DisplayModuleWeather::weatherToIcon(IconWeatherImage::IconWeater value, tImage * config)
+const uint8_t* DisplayModuleWeather::weatherToIcon(IconWeatherImage::IconWeater value, tImage * config,  bool lowDef)
 {
       switch(value)
       {
             case IconWeatherImage::cloud:
-                  *config = wicloudy;
-                  return image_data_wicloudy;
+                  if(lowDef)
+                  {
+                        *config = wicloudy_Low;
+                        return image_data_wicloudy_Low;
+                  }else
+                  {
+                        *config = wicloudy;
+                        return image_data_wicloudy;
+                  }
             break;
 
             case IconWeatherImage::rain:
-                  *config = wihail;
-                  return image_data_wihail;
+                  if(lowDef)
+                  {
+                        *config = wihail_low;
+                        return image_data_wihail_low;
+                  }else
+                  {
+                        *config = wihail;
+                        return image_data_wihail;
+                  }
             break;
 
             case IconWeatherImage::sun:
-                  *config = widaysunny;
-                  return image_data_widaysunny;
+                  if(lowDef)
+                  {
+                        *config = widaysunny_low;
+                        return image_data_widaysunny_low;
+                  }else
+                  {
+                        *config = widaysunny;
+                        return image_data_widaysunny;
+                  }
             break;
 
             default:
-                  *config = wialien;
-                  return image_data_wialien;
+                  if(lowDef)
+                  {
+                        *config = wialien_low;
+                        return image_data_wialien_low;
+                  }else
+                  {
+                        *config = wialien;
+                        return image_data_wialien;
+                  }
             break;
       }
 }
