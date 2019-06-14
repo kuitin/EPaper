@@ -27,9 +27,22 @@ void DisplayModuleWeather::FillModule(GxEPD& m_GxEPD)
       m_GxEPD.setCursor(relativePos.x, relativePos.y + 100 );
       m_GxEPD.println(String(WEATHER_TEMPERATUREINDOOR) + String(m_dataViewWeather->TemperatureIn, 1 ) + "C" );
       tImage config;
-      const uint8_t* iconWeather =  weatherToIcon(IconWeatherImage::cloud, &config);
-      m_GxEPD.drawExampleBitmap(image_data_wicloudy, relativePos.x + 130, relativePos.y + 3, config.width, config.height, GxEPD_BLACK);
+      const uint8_t* iconWeather =  weatherToIcon(m_dataViewWeather->weather, &config);
+      m_GxEPD.drawExampleBitmap(iconWeather, relativePos.x + 130, relativePos.y + 3, config.width, config.height, GxEPD_BLACK);
       
+      // Display weather of the weekWeather
+      for (int itrDay = 0; itrDay < MAX_DAY_WEATHER ; itrDay ++ )
+      {
+            m_GxEPD.setCursor(relativePos.x, relativePos.y + 130 + itrDay*20);
+            const uint8_t* iconWeatherTemp =  weatherToIcon(m_dataViewWeather->weekWeather[itrDay].weatherMorning, &config);
+            m_GxEPD.drawExampleBitmap(iconWeatherTemp, relativePos.x + 20, relativePos.y + 130 + itrDay*20, 
+                                      5, 5, GxEPD_BLACK);
+            m_GxEPD.println(String(UtilTime::getDayOfWeekStr(m_dataViewWeather->weekWeather[itrDay].DayOfWeek)) + "       " +
+                      String(m_dataViewWeather->weekWeather[itrDay].TemperatureMax, 1 ) + "  " +
+                      String(m_dataViewWeather->weekWeather[itrDay].TemperatureMin, 1 )  );
+      }
+      
+
       
 }
 

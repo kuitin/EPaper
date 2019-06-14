@@ -79,10 +79,12 @@ void ControllerModuleWeather::CollectWeatherOfWeek(JsonArray& array)
     int FirstYear, FirstMonth, FirstDay, FirstHour, Minute, Second ;
     sscanf(array[0]["dt_txt"].as<char*>(), "%d-%d-%d %d:%d:%d", &FirstYear, &FirstMonth, &FirstDay, &FirstHour, &Minute, &Second);
     int itrDay = 0;
+    Serial.printf("FirstDay= %d; FirstHour=%d\n",  FirstDay, FirstHour);
     for(JsonVariant currentJson : array) {   
         int Year , Month, Day, Hour ;    
         sscanf(currentJson["dt_txt"].as<char*>(), "%d-%d-%d %d:%d:%d", &Year, &Month, &Day, &Hour, &Minute, &Second);
-        if( FirstHour > 12 &&  FirstYear == Year && 
+        Serial.printf("Day= %d; FirstHour=%d\n",  Day, FirstHour);
+        if( FirstHour > 9 &&  FirstYear == Year && 
             FirstMonth == Month && FirstDay == Day)
         {
            // La matinée est terminée on passe à la journée d'après.
@@ -90,18 +92,27 @@ void ControllerModuleWeather::CollectWeatherOfWeek(JsonArray& array)
         }     
         if(Hour == 9 || Hour == 15)
         {
-           // m_dataWeather->weekWeather[itrDay].DayOfWeek = UtilTime::dayOfWeek(Year, Month, Day);
+            m_dataWeather->weekWeather[itrDay].DayOfWeek = UtilTime::dayOfWeek(Year, Month, Day);
+            
+             
             if(Hour == 9)
-                m_dataWeather->weekWeather[itrDay].TemperatureMin   = currentJson["main"][0]["temp"].as<double>();
-            else 
-                m_dataWeather->weekWeather[itrDay].TemperatureMax   = currentJson["main"][0]["temp"].as<double>();
-            if(Hour == 9)
-                m_dataWeather->weekWeather[itrDay].weatherMorning   = IconCodeToIconImg(currentJson["weather"][0]["icon"].as<String>());
+            {
+                Serial.printf(" m_dataWeather->weekWeather[itrDay].DayOfWeek %s\n",  currentJson["main"]["temp"].as<char*>());
+                m_dataWeather->weekWeather[itrDay].TemperatureMin   = atof(currentJson["main"]["temp"].as<char*>()) - 273.15;
+                Serial.printf(" m_dataWeather->weekWeather[itrDay].TemperatureMin %f\n",  m_dataWeather->weekWeather[itrDay].TemperatureMin);
+            }
             else 
             {
-                m_dataWeather->weekWeather[itrDay].weatherAfternoon =  IconCodeToIconImg(currentJson["weather"][0]["icon"].as<String>());
+                m_dataWeather->weekWeather[itrDay].TemperatureMax   = atof(currentJson["main"]["temp"].as<char*>()) - 273.15;
+            }
+            if(Hour == 9)
+                m_dataWeather->weekWeather[itrDay].weatherMorning   = IconCodeToIconImg(currentJson["weather"][0]["icon"].as<char*>());
+            else 
+            {
+                m_dataWeather->weekWeather[itrDay].weatherAfternoon =  IconCodeToIconImg(currentJson["weather"][0]["icon"].as<char*>());
                 itrDay++;
             }
+            
         }   
 
         if(itrDay >= MAX_DAY_WEATHER) break;
@@ -116,7 +127,7 @@ IconWeatherImage::IconWeater ControllerModuleWeather::IconCodeToIconImg(String i
     {
         result = IconWeatherImage::sun;
     }
-    else if( iconTable == "02d" || iconTable == "02n" )
+    else if( iconTable == "02d" || iconTable == "02n" || iconTable == "04d")
     {
         result = IconWeatherImage::cloud;
     }

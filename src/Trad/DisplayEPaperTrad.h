@@ -9,6 +9,14 @@
 
 #define WEATHER_TEMPERATUREINDOOR "Indoor: "
 
+#define WEATHER_MONDAY "Mon"
+#define WEATHER_SUNDAY "Sun"
+#define WEATHER_TUESDAY "Tue"
+#define WEATHER_WEDNESDAY "Wed"
+#define WEATHER_THURSDAY "Thu"
+#define WEATHER_FRIDAY "Fri"
+#define WEATHER_SATURDAY "Sat"
+
 #endif // ENGLISH
 
 class tessse {

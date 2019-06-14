@@ -16,13 +16,13 @@ struct Time_data
 };
 
  enum  DAY_OF_WEEK{
-        Sunday = 1,
-        Monday = 2,
+        Saturday = 0,
+        Sunday   = 1,
+        Monday   = 2,
         Tuesday,
         Wednesday,
         Thursday,
-        Friday,
-        Saturday
+        Friday        
     };
 
 class UtilTime

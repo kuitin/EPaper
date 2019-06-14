@@ -1,5 +1,5 @@
 #include <Modules/Utils/UtilTime.h>
-
+#include <Trad/DisplayEPaperTrad.h>
 
 static const unsigned char countTime = 15;
 static const unsigned long summerTime [countTime] = { 1553994000,
@@ -122,13 +122,13 @@ DAY_OF_WEEK UtilTime::dayOfWeek(uint16_t year, uint8_t month, uint8_t day)
 String UtilTime::getDayOfWeekStr(int dayOfWeekNbr)
 {
     switch (dayOfWeekNbr) {
-        case DAY_OF_WEEK::Sunday:      return "Sunday" ;
-        case DAY_OF_WEEK::Monday:      return "Monday" ;
-        case DAY_OF_WEEK::Tuesday:     return "Tuesday" ;
-        case DAY_OF_WEEK::Wednesday:   return "Wednesday" ;
-        case DAY_OF_WEEK::Thursday:    return "Thursday" ;
-        case DAY_OF_WEEK::Friday:      return "Friday" ;
-        case DAY_OF_WEEK::Saturday:    return "Saturday" ;
+        case DAY_OF_WEEK::Sunday:      return WEATHER_SUNDAY ;
+        case DAY_OF_WEEK::Monday:      return WEATHER_MONDAY ;
+        case DAY_OF_WEEK::Tuesday:     return WEATHER_TUESDAY;
+        case DAY_OF_WEEK::Wednesday:   return WEATHER_WEDNESDAY ;
+        case DAY_OF_WEEK::Thursday:    return WEATHER_THURSDAY ;
+        case DAY_OF_WEEK::Friday:      return WEATHER_FRIDAY ;
+        case DAY_OF_WEEK::Saturday:    return WEATHER_SATURDAY ;
         default :                      return "unknown";
     }
 }
