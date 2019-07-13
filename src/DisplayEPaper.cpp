@@ -14,9 +14,9 @@ void DisplayEPaper::Init()
 //     LogInterface.begin(logLevel, output);
 // }
 
-void DisplayEPaper::TestAddNewTimeLineModule()
+void DisplayEPaper::TestAddNewTimeLineModule(const String & calendarUrl)
 {
-    ControllerModuleTimeline* currentModule = new ControllerModuleTimeline();
+    ControllerModuleTimeline* currentModule = new ControllerModuleTimeline(calendarUrl);
     AddNewModule(currentModule);
 }
 

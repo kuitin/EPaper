@@ -96,7 +96,7 @@ void ControllerModuleWeather::CollectWeatherOfWeek(JsonArray& array)
             itrDay = itrDay + 1;
             if(itrDay >= MAX_DAY_WEATHER) break;
             //Serial.printf("Day= %d; lastDay=%f; itrDay=%i\n",  Day, lastDay, itrDay);
-            m_dataWeather->weekWeather[itrDay].DayOfWeek = UtilTime::dayOfWeek(Year, Month, Day);
+            m_dataWeather->weekWeather[itrDay].DayOfWeek = UtilTime::day_Of_Week(Year, Month, Day);
             m_dataWeather->weekWeather[itrDay].TemperatureMin   = atof(currentJson["main"]["temp"].as<char*>()) - 273.15;
             m_dataWeather->weekWeather[itrDay].TemperatureMax   = atof(currentJson["main"]["temp"].as<char*>()) - 273.15;
             m_dataWeather->weekWeather[itrDay].weatherMorning   =  IconWeatherImage::none;

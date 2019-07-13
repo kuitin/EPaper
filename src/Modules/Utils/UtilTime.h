@@ -31,7 +31,7 @@ class UtilTime
     
     static String makeTimeToStr(unsigned long timestamp );
     static Time_data makeTimeToDataTime(unsigned long timestamp );
-    static DAY_OF_WEEK dayOfWeek(uint16_t year, uint8_t month, uint8_t day);
+    static DAY_OF_WEEK day_Of_Week(uint16_t year, uint8_t month, uint8_t day);
     static String getDayOfWeekStr(int dayOfWeekNbr);
 };
 

@@ -20,7 +20,7 @@ class DisplayEPaper
 	virtual void Init();
 	//virtual void InitWithLog(int logLevel, Print *output);
 	virtual void AddNewModule(ControllerModule* currentModule);
-	virtual void TestAddNewTimeLineModule();
+	virtual void TestAddNewTimeLineModule(const String & calendarUrl);
 	virtual void TestAddNewWeatherModule(const String & forecastURL);
 	virtual	void AddNewClockModule(int cornerThickness, int width, int height,bool updateTime);
 	virtual void DrawModules() = 0;

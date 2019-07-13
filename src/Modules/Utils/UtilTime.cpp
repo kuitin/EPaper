@@ -105,7 +105,7 @@ String UtilTime::makeTimeToStr(unsigned long timestamp ){
 
 #define LEAP_YEAR(Y)     ( (Y>0) && !(Y%4) && ( (Y%100) || !(Y%400) ))     // from time-lib
 
-DAY_OF_WEEK UtilTime::dayOfWeek(uint16_t year, uint8_t month, uint8_t day)
+DAY_OF_WEEK UtilTime::day_Of_Week(uint16_t year, uint8_t month, uint8_t day)
 {
   uint16_t months[] = {
     0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365         };   // days until 1st of month
