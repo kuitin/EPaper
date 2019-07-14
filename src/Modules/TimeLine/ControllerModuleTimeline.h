@@ -10,7 +10,7 @@
 class ControllerModuleTimeline : public ControllerModule 
 {
 	public:
-    ControllerModuleTimeline(const String & calendarUrl) ;
+    ControllerModuleTimeline(const String & calendarUrl, int utc = 1) ;
     ~ControllerModuleTimeline();
     void UpdateData();
     void UpdateDataView();
@@ -21,6 +21,8 @@ class ControllerModuleTimeline : public ControllerModule
     DataViewTimeline* m_dataView;
     bool m_flagNeedUpdate;
     String m_calandarUrl;
+    int m_Utc;
+    bool m_isDSTEnable;
     
 };
 

@@ -4,11 +4,13 @@
 #include <TimeLib.h> 
 #include "WiFiClientSecure.h"
 
-ControllerModuleTimeline::ControllerModuleTimeline (const String& calandarUrl) :
+ControllerModuleTimeline::ControllerModuleTimeline (const String& calandarUrl, int utc) :
     m_flagNeedUpdate(false),
-    m_calandarUrl(calandarUrl)
+    m_calandarUrl(calandarUrl),
+    m_Utc(utc)
 {
     m_dataView = new DataViewTimeline();
+    m_dataView->utc = utc;
     m_view = new DisplayModuleTimeLine(m_dataView);
     
 }
@@ -45,18 +47,22 @@ void ControllerModuleTimeline::UpdateDataView()
     // No need because the datamodel = data = pointer.
 }
 const char* ntpServer = "pool.ntp.org";
+// TODO personalize according countries the UTC and DST
 const long  gmtOffset_sec = 3600;
 const int   daylightOffset_sec = 3600;
 unsigned long  ControllerModuleTimeline::GetTime()
 {
     unsigned long result = 0;
-    configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
+    configTime(3600 * m_Utc, daylightOffset_sec, ntpServer);
     struct tm timeinfo;
     if(!getLocalTime(&timeinfo)){
     Serial.println("Failed to obtain time");
     return 0;
     }
     Serial.println(&timeinfo, "%A, %B %d %Y %H:%M:%S");
+    m_isDSTEnable = timeinfo.tm_isdst;
+    m_dataView->m_isDSTEnable = m_isDSTEnable;
+    Serial.println("DST " + String(timeinfo.tm_isdst) );
     time_t now;
 
     time(&now);
@@ -157,7 +163,9 @@ void ControllerModuleTimeline::ParseGoogleCalendar()
       for(JsonVariant currentJson : arrayCalendar) { 
 
           DateContent tempData {currentJson["startTime"].as<unsigned int>(),
-                                currentJson["title"].as<String>()};
+                                currentJson["endTime"].as<unsigned int>(),
+                                currentJson["title"].as<String>(),
+                                currentJson["isAllDay"].as<bool>()};
           m_dataView->listEvent.push_back(tempData);
       }
       client.stop();

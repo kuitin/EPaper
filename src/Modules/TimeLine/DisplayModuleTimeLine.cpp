@@ -1,6 +1,7 @@
 #include <Modules/TimeLine/DisplayModuleTimeLine.h>
 #include <Fonts/FreeSans9pt7b.h>
-
+#include <TimeLib.h>
+#include <Modules/Utils/UtilTime.h>
 
 #define DISPLAYMODULETIMELINE_LINEPOS_X 10
 #define DISPLAYMODULETIMELINE_12HOURTOSEC 43200
@@ -16,7 +17,7 @@ DisplayModuleTimeLine::DisplayModuleTimeLine(DataViewTimeline* viewData) :
 
 }
 
-
+#define DISPLAYMODULETIMELINE_MAXEVENT 5
 void DisplayModuleTimeLine::FillModule(GxEPD& m_GxEPD)
 {
       Point relativePos = GetPosRelative();
@@ -25,13 +26,10 @@ void DisplayModuleTimeLine::FillModule(GxEPD& m_GxEPD)
 
       // Get all event in a period
       std::vector<DateContent> dataInPeriod;
-      for ( int itrData=0; itrData <  m_viewDatas->listEvent.size(); itrData ++ )
+      for ( int itrData=0; itrData <  DISPLAYMODULETIMELINE_MAXEVENT; itrData ++ )
       {
             DateContent currentData =  m_viewDatas->listEvent.at(itrData);
-            if ( currentData.date < m_viewDatas->period + m_viewDatas->currentDate && currentData.date > m_viewDatas->currentDate - DISPLAYMODULETIMELINE_12HOURTOSEC )
-            {
-                  dataInPeriod.push_back(currentData);
-            }
+            dataInPeriod.push_back(currentData);
       }      
 
       const GFXfont* f = &FreeSans9pt7b;
@@ -48,8 +46,8 @@ void DisplayModuleTimeLine::FillModule(GxEPD& m_GxEPD)
       if(eventCount == 0)
       return;
 
-      unsigned int dateFirstEvent = dataInPeriod.at( 0 ).date;
-      unsigned int dateLastEvent = dataInPeriod.at( eventCount - 1 ).date;
+    //   unsigned int dateFirstEvent = dataInPeriod.at( 0 ).startDate;
+    //   unsigned int dateLastEvent = dataInPeriod.at( eventCount - 1 ).startDate;
       unsigned int maxEvent = GetHeight() / DISPLAYMODULETIMELINE_HIGHTPIXELLETTER;
       
       unsigned int gridUnit = GetHeight() / eventCount;
@@ -60,8 +58,11 @@ void DisplayModuleTimeLine::FillModule(GxEPD& m_GxEPD)
             DateContent currentData = dataInPeriod.at(itrData);           
            
             m_GxEPD.setCursor(relativePos.x + DISPLAYMODULETIMELINE_LINEPOS_X, itrData * gridUnit + DISPLAYMODULETIMELINE_HIGHTPIXELLETTER + deltaStart);
+            
+            
             // Print event date            
-            m_GxEPD.println(makeTime(currentData.date));
+            // m_GxEPD.println(makeTimeFromTimestamp(currentData.startDate));
+            m_GxEPD.println(formatDate(currentData));
 
             // Print event content
             String sentenceToDisplay ( currentData.eventDetails);
@@ -79,6 +80,105 @@ void DisplayModuleTimeLine::FillModule(GxEPD& m_GxEPD)
             m_GxEPD.setCursor(relativePos.x + DISPLAYMODULETIMELINE_LINEPOS_X, itrData * gridUnit + DISPLAYMODULETIMELINE_HIGHTPIXELLETTER * 2 + deltaStart);
             m_GxEPD.println(sentenceToDisplay);
       }
+}
+#define TIMELINE_TODAY "Today"
+#define TIMELINE_TOMORROW "Tomorrow"
+#define TIMELINE_ENDDAYS "End in %d days"
+String DisplayModuleTimeLine::formatDate(DateContent currentData ){
+    tmElements_t tmTemp;
+    breakTime(m_viewDatas->currentDate , tmTemp);
+    String strDate = makeTimeFromTimestamp(m_viewDatas->currentDate);
+    // int Year, Month, Day, Hour, Minute, Second ;
+    // sscanf(strDate.c_str(), "%d-%d-%d %d:%d:%d", &Day, &Month, &Year, &Hour, &Minute, &Second);
+    char buffer [50];
+    sprintf (buffer, "%d-%d-%d %d:%d:%d", tmTemp.Day, tmTemp.Month, 1970 + tmTemp.Year,0,0,0);
+    unsigned long morningTimestamp = getTimeStampFromDate(buffer);
+
+    if(currentData.isAllDay == true)
+    {
+        
+        
+        if(currentData.startDate < morningTimestamp)
+        {
+            Serial.println("morningTimestamp " + String(morningTimestamp) );
+            Serial.println("currentData.endDate " + String(currentData.endDate) );
+            // Already started
+            int numberOfDays = (currentData.endDate - morningTimestamp) / (24*60*60) ;
+            char displayDate [50];
+            sprintf (displayDate, TIMELINE_ENDDAYS, numberOfDays);
+            return displayDate;
+        }
+        // Today
+        else if(currentData.startDate >= morningTimestamp &&
+                currentData.startDate < morningTimestamp + 24*60*60)
+        {
+            // Start Today
+            return TIMELINE_TODAY;
+        }
+        else if(currentData.startDate >= morningTimestamp + 24*60*60 &&
+                currentData.startDate < morningTimestamp + 24*60*60*2){
+            // Start Tomorrow
+            return TIMELINE_TOMORROW;
+        }
+        else if(currentData.startDate >= morningTimestamp + 24*60*60*2 &&
+                currentData.startDate < morningTimestamp + 24*60*60*5){
+            // Start Day in week
+            tmElements_t newTimeDate;
+            breakTime(currentData.startDate + m_viewDatas->m_isDSTEnable*3600 + m_viewDatas->utc * 3600, newTimeDate);
+            // Time_data newTimeDate =  UtilTime::makeTimeToDataTime(currentData.startDate);
+            // DAY_OF_WEEK currentDay = UtilTime::day_Of_Week( newTimeDate.year,  newTimeDate.month, newTimeDate.day);
+            return dayStr(newTimeDate.Day);// UtilTime::getDayOfWeekStr(currentDay);
+        }
+        else
+        {
+            // Later
+            tmElements_t tm;
+            breakTime(currentData.startDate + m_viewDatas->m_isDSTEnable*3600 + m_viewDatas->utc * 3600 , tm);
+            return String(tm.Day) + "-" + String(tm.Month) + "-" + String(1970 + tm.Year) + " " + String(tm.Hour) + ":" + String(tm.Minute);
+        }     
+    }
+    else
+    {
+         // Today
+         Serial.println("morningTimestamp " + String(morningTimestamp) );
+         Serial.println("currentData.startDate " + String(currentData.startDate) );
+        if(currentData.startDate >= morningTimestamp &&
+           currentData.startDate < morningTimestamp + 24*60*60)
+        {
+            // Start Today
+            tmElements_t newTimeDate;
+            breakTime(currentData.startDate + m_viewDatas->m_isDSTEnable*3600 + m_viewDatas->utc * 3600, newTimeDate);
+            String message = String(TIMELINE_TODAY) + " " + String(newTimeDate.Hour) + ":" + String(newTimeDate.Minute);
+            return message;
+        }
+        else if(currentData.startDate >= morningTimestamp + 24*60*60 &&
+                currentData.startDate < morningTimestamp + 24*60*60*2){
+            // Start Tomorrow
+            tmElements_t newTimeDate;
+            breakTime(currentData.startDate + m_viewDatas->m_isDSTEnable*3600 + m_viewDatas->utc * 3600, newTimeDate);
+            String message = String(TIMELINE_TOMORROW) + " " + String(newTimeDate.Hour) + ":" + String(newTimeDate.Minute);
+            return message;
+        }
+        else if(currentData.startDate >= morningTimestamp + 24*60*60*2 &&
+                currentData.startDate < morningTimestamp + 24*60*60*7){
+            // Start Day in week
+            tmElements_t newTimeDate;
+            breakTime(currentData.startDate + m_viewDatas->m_isDSTEnable*3600 + m_viewDatas->utc * 3600, newTimeDate);
+            String message = String(dayStr(newTimeDate.Wday)) + " " + String(newTimeDate.Hour) + ":" + String(newTimeDate.Minute);
+            return message;
+        }
+        else
+        {
+            // Later
+            tmElements_t tm;
+            breakTime(currentData.startDate + m_viewDatas->m_isDSTEnable*3600 + m_viewDatas->utc * 3600 , tm);
+            return String(tm.Day) + "-" + String(tm.Month) + "-" + String(1970 + tm.Year) + " " + String(tm.Hour) + ":" + String(tm.Minute);
+        }   
+    }
+    
+   
+    
+    
 }
 static const unsigned char countTime = 15;
 static const unsigned long summerTime [countTime] = { 1553994000,
@@ -112,7 +212,7 @@ static const unsigned long winterTime [countTime] = { 1540688400,
                                                       1950742800,
                                                       1982797200 };
 
-String DisplayModuleTimeLine::makeTime(unsigned long timestamp ){
+String DisplayModuleTimeLine::makeTimeFromTimestamp(unsigned long timestamp ){
 // source:https://stackoverflow.com/questions/7136385/calculate-day-number-from-an-unix-timestamp-in-a-math-way
 // note year argument is full four digit year (or digits since 2000), i.e.1975, (year 8 is 2008)
      // Manage Winter/Summer time
@@ -158,7 +258,22 @@ String DisplayModuleTimeLine::makeTime(unsigned long timestamp ){
     unsigned m = mp + (mp < 10 ? 3 : -9);
     y += (m <= 2);
 
-    result = String(d) + "/" + String(m) + "/" + String(y) + " " + String(hour) + ":" + String(minute);
+    result = String(d) + "-" + String(m) + "-" + String(y) + " " + String(hour) + ":" + String(minute);
 
     return result;
+}
+
+unsigned long DisplayModuleTimeLine::getTimeStampFromDate(String date ){
+// source:https://forum.arduino.cc/index.php?topic=465881.0
+
+    tmElements_t tm;
+    int Year, Month, Day, Hour, Minute, Second ;
+    sscanf(date.c_str(), "%d-%d-%d %d:%d:%d", &Day, &Month, &Year, &Hour, &Minute, &Second);
+    tm.Year = CalendarYrToTm(Year);
+    tm.Month = Month;
+    tm.Day = Day;
+    tm.Hour = Hour;
+    tm.Minute = Minute;
+    tm.Second = Second;
+    return makeTime(tm);
 }
