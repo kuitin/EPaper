@@ -111,14 +111,14 @@ void ControllerModuleTimeline::ParseGoogleCalendar()
   Serial.println("movedURL");
     Serial.println(movedURL);
 
-//   while (client.connected())    // Google Antwort HTML Zeilenweise Lesen
-//   {
-//     if (client.available())
-//     {
-//       line = client.readStringUntil('\r');
-//       if (1) Serial.print(line);
-//     }
-//   }
+  while (client.connected())    // Google Antwort HTML Zeilenweise Lesen
+  {
+    if (client.available())
+    {
+      line = client.readStringUntil('\r');
+      if (1) Serial.print(line);
+    }
+  }
   client.stop();
 
   movedURL.trim(); // leerzeichen, \n entfernen

@@ -8,6 +8,10 @@
 #define DISPLAYMODULETIMELINE_HIGHTPIXELLETTER 18
 #define DISPLAYMODULETIMELINE_MAXLENGTHCONTENT 17
 #define DISPLAYMODULETIMELINE_LENGTHCONTENT 20
+#define DISPLAYMODULETIMELINE_SLIDE_LENGTH_Y 10
+
+#define DISPLAYMODULETIMELINE_EVENT_LINEPOS_X 15
+#define DISPLAYMODULETIMELINE_EVENT_LENGTH_Y (DISPLAYMODULETIMELINE_SLIDE_LENGTH_Y + 5)
 
 using namespace std;
 DisplayModuleTimeLine::DisplayModuleTimeLine(DataViewTimeline* viewData) :
@@ -48,18 +52,122 @@ void DisplayModuleTimeLine::FillModule(GxEPD& m_GxEPD)
 
     //   unsigned int dateFirstEvent = dataInPeriod.at( 0 ).startDate;
     //   unsigned int dateLastEvent = dataInPeriod.at( eventCount - 1 ).startDate;
-      unsigned int maxEvent = GetHeight() / DISPLAYMODULETIMELINE_HIGHTPIXELLETTER;
+        unsigned int maxEvent = GetHeight() / DISPLAYMODULETIMELINE_HIGHTPIXELLETTER;
       
-      unsigned int gridUnit = GetHeight() / eventCount;
-
-      int deltaStart = DISPLAYMODULETIMELINE_HIGHTPIXELLETTER + 5;
-      for ( int itrData=0; itrData < dataInPeriod.size(); itrData ++ )
-      {
+    int deltaStart = DISPLAYMODULETIMELINE_HIGHTPIXELLETTER + 5;
+    unsigned int gridUnit = deltaStart * 3;//GetHeight() / eventCount;
+    for ( int itrData=0; itrData < dataInPeriod.size(); itrData ++ )
+    {
+            // Draw horizontal line
+            m_GxEPD.drawLine(relativePos.x , itrData * gridUnit + deltaStart , 
+                             relativePos.x +GetWidth() - 1, itrData * gridUnit + deltaStart, 
+                             GxEPD_RED);
+            // upper array
+            if (itrData != 0)
+            {
+                // Not draw the upper to hide the title
+                for( int itrLine=1; itrLine < 10; itrLine ++ )
+                {
+                    m_GxEPD.drawLine(relativePos.x + itrLine*2, itrData * gridUnit + deltaStart - itrLine -1, 
+                                    relativePos.x + GetWidth() - 1 - itrLine*2, itrData * gridUnit + deltaStart- itrLine -1, 
+                                    GxEPD_BLACK);
+                }
+            }
+            //Draw one more  array
+            if (itrData == dataInPeriod.size() -1)
+            {
+                // Not draw the upper to hide the title
+                for( int itrLine=1; itrLine < 10; itrLine ++ )
+                {
+                    m_GxEPD.drawLine(relativePos.x + itrLine*2, (itrData+1)  * gridUnit + deltaStart - itrLine, 
+                                    relativePos.x +GetWidth() - 1 - itrLine*2, (itrData+1) * gridUnit + deltaStart- itrLine, 
+                                    GxEPD_BLACK);
+                }
+                 m_GxEPD.drawLine(relativePos.x , (itrData+1) * gridUnit + deltaStart +1 , 
+                             relativePos.x +GetWidth()  - 1, (itrData+1) * gridUnit + deltaStart +1, 
+                             GxEPD_RED);
+            }
+            //Down array
+            for( int itrLine=1; itrLine < 10; itrLine ++ )
+            {
+                m_GxEPD.drawLine(relativePos.x + itrLine*2, itrData * gridUnit + deltaStart + itrLine+1, 
+                                relativePos.x +GetWidth() - 1 - itrLine*2, itrData * gridUnit + deltaStart + itrLine+1, 
+                                GxEPD_BLACK);
+            }
+            
+            // Draw vertical line
+            int lineDrawVerticalCount = 10;
+            for( int itrLine=4; itrLine < lineDrawVerticalCount; itrLine ++ )
+            {
+                m_GxEPD.drawLine(relativePos.x + itrLine*2 , itrData * gridUnit + deltaStart + itrLine +2 , 
+                                relativePos.x + itrLine*2, (itrData+1) * gridUnit + deltaStart  - itrLine -1, 
+                                GxEPD_RED);
+                m_GxEPD.drawLine(relativePos.x + itrLine*2 +1, itrData * gridUnit + deltaStart + itrLine +2, 
+                                relativePos.x + itrLine*2+1, (itrData+1) * gridUnit + deltaStart  - itrLine-1, 
+                                GxEPD_RED);
+            }
+          
             DateContent currentData = dataInPeriod.at(itrData);           
            
-            m_GxEPD.setCursor(relativePos.x + DISPLAYMODULETIMELINE_LINEPOS_X, itrData * gridUnit + DISPLAYMODULETIMELINE_HIGHTPIXELLETTER + deltaStart);
+            m_GxEPD.setCursor(relativePos.x + DISPLAYMODULETIMELINE_LINEPOS_X + DISPLAYMODULETIMELINE_EVENT_LINEPOS_X,
+                              itrData * gridUnit + DISPLAYMODULETIMELINE_HIGHTPIXELLETTER + deltaStart + DISPLAYMODULETIMELINE_EVENT_LENGTH_Y - 3);
             
-            
+            int lineDayUpY = -18;
+            int lineDayMiddleY = -8;
+            int lineDayDownY = 2;
+            m_GxEPD.drawLine(relativePos.x + DISPLAYMODULETIMELINE_LINEPOS_X + 9 , 
+                             itrData * gridUnit + DISPLAYMODULETIMELINE_HIGHTPIXELLETTER + deltaStart + DISPLAYMODULETIMELINE_EVENT_LENGTH_Y + lineDayMiddleY, 
+                             relativePos.x + DISPLAYMODULETIMELINE_LINEPOS_X + 15, 
+                             itrData * gridUnit + DISPLAYMODULETIMELINE_HIGHTPIXELLETTER + deltaStart + DISPLAYMODULETIMELINE_EVENT_LENGTH_Y + lineDayDownY,
+                                GxEPD_RED);
+             m_GxEPD.drawLine(relativePos.x + DISPLAYMODULETIMELINE_LINEPOS_X + 10 , 
+                             itrData * gridUnit + DISPLAYMODULETIMELINE_HIGHTPIXELLETTER + deltaStart + DISPLAYMODULETIMELINE_EVENT_LENGTH_Y + lineDayMiddleY, 
+                             relativePos.x + DISPLAYMODULETIMELINE_LINEPOS_X + 16, 
+                             itrData * gridUnit + DISPLAYMODULETIMELINE_HIGHTPIXELLETTER + deltaStart + DISPLAYMODULETIMELINE_EVENT_LENGTH_Y + lineDayDownY,
+                                GxEPD_RED);
+
+            m_GxEPD.drawLine(relativePos.x + DISPLAYMODULETIMELINE_LINEPOS_X + 15 , 
+                             itrData * gridUnit + DISPLAYMODULETIMELINE_HIGHTPIXELLETTER + deltaStart + DISPLAYMODULETIMELINE_EVENT_LENGTH_Y + lineDayDownY, 
+                             relativePos.x + DISPLAYMODULETIMELINE_LINEPOS_X + 15*11, 
+                             itrData * gridUnit + DISPLAYMODULETIMELINE_HIGHTPIXELLETTER + deltaStart + DISPLAYMODULETIMELINE_EVENT_LENGTH_Y + lineDayDownY,
+                                GxEPD_RED);
+
+            m_GxEPD.drawLine(relativePos.x + DISPLAYMODULETIMELINE_LINEPOS_X + 15 *11, 
+                             itrData * gridUnit + DISPLAYMODULETIMELINE_HIGHTPIXELLETTER + deltaStart + DISPLAYMODULETIMELINE_EVENT_LENGTH_Y + lineDayDownY, 
+                             relativePos.x + DISPLAYMODULETIMELINE_LINEPOS_X + 15*11 + 6, 
+                             itrData * gridUnit + DISPLAYMODULETIMELINE_HIGHTPIXELLETTER + deltaStart + DISPLAYMODULETIMELINE_EVENT_LENGTH_Y + lineDayMiddleY,
+                                GxEPD_RED);
+            m_GxEPD.drawLine(relativePos.x + DISPLAYMODULETIMELINE_LINEPOS_X + 15 *11 -1, 
+                             itrData * gridUnit + DISPLAYMODULETIMELINE_HIGHTPIXELLETTER + deltaStart + DISPLAYMODULETIMELINE_EVENT_LENGTH_Y + lineDayDownY, 
+                             relativePos.x + DISPLAYMODULETIMELINE_LINEPOS_X + 15*11 + 5, 
+                             itrData * gridUnit + DISPLAYMODULETIMELINE_HIGHTPIXELLETTER + deltaStart + DISPLAYMODULETIMELINE_EVENT_LENGTH_Y + lineDayMiddleY,
+                                GxEPD_RED);
+
+            m_GxEPD.drawLine(relativePos.x + DISPLAYMODULETIMELINE_LINEPOS_X + 15 *11 + 6, 
+                             itrData * gridUnit + DISPLAYMODULETIMELINE_HIGHTPIXELLETTER + deltaStart + DISPLAYMODULETIMELINE_EVENT_LENGTH_Y + lineDayMiddleY, 
+                             relativePos.x + DISPLAYMODULETIMELINE_LINEPOS_X + 15*11 , 
+                             itrData * gridUnit + DISPLAYMODULETIMELINE_HIGHTPIXELLETTER + deltaStart + DISPLAYMODULETIMELINE_EVENT_LENGTH_Y + lineDayUpY,
+                                GxEPD_RED);
+            m_GxEPD.drawLine(relativePos.x + DISPLAYMODULETIMELINE_LINEPOS_X + 15 *11+ 5 , 
+                             itrData * gridUnit + DISPLAYMODULETIMELINE_HIGHTPIXELLETTER + deltaStart + DISPLAYMODULETIMELINE_EVENT_LENGTH_Y + lineDayMiddleY, 
+                             relativePos.x + DISPLAYMODULETIMELINE_LINEPOS_X + 15*11 -1, 
+                             itrData * gridUnit + DISPLAYMODULETIMELINE_HIGHTPIXELLETTER + deltaStart + DISPLAYMODULETIMELINE_EVENT_LENGTH_Y + lineDayUpY,
+                                GxEPD_RED);
+            m_GxEPD.drawLine(relativePos.x + DISPLAYMODULETIMELINE_LINEPOS_X + 15 , 
+                             itrData * gridUnit + DISPLAYMODULETIMELINE_HIGHTPIXELLETTER + deltaStart + DISPLAYMODULETIMELINE_EVENT_LENGTH_Y + lineDayUpY, 
+                             relativePos.x + DISPLAYMODULETIMELINE_LINEPOS_X + 15*11, 
+                             itrData * gridUnit + DISPLAYMODULETIMELINE_HIGHTPIXELLETTER + deltaStart + DISPLAYMODULETIMELINE_EVENT_LENGTH_Y + lineDayUpY,
+                                GxEPD_RED);
+             m_GxEPD.drawLine(relativePos.x + DISPLAYMODULETIMELINE_LINEPOS_X + 15 , 
+                             itrData * gridUnit + DISPLAYMODULETIMELINE_HIGHTPIXELLETTER + deltaStart + DISPLAYMODULETIMELINE_EVENT_LENGTH_Y + lineDayUpY, 
+                             relativePos.x + DISPLAYMODULETIMELINE_LINEPOS_X + 9, 
+                             itrData * gridUnit + DISPLAYMODULETIMELINE_HIGHTPIXELLETTER + deltaStart + DISPLAYMODULETIMELINE_EVENT_LENGTH_Y + lineDayMiddleY,
+                                GxEPD_RED);
+             m_GxEPD.drawLine(relativePos.x + DISPLAYMODULETIMELINE_LINEPOS_X +16  , 
+                             itrData * gridUnit + DISPLAYMODULETIMELINE_HIGHTPIXELLETTER + deltaStart + DISPLAYMODULETIMELINE_EVENT_LENGTH_Y + lineDayUpY, 
+                             relativePos.x + DISPLAYMODULETIMELINE_LINEPOS_X + 10, 
+                             itrData * gridUnit + DISPLAYMODULETIMELINE_HIGHTPIXELLETTER + deltaStart + DISPLAYMODULETIMELINE_EVENT_LENGTH_Y + lineDayMiddleY,
+                                GxEPD_RED);
             // Print event date            
             // m_GxEPD.println(makeTimeFromTimestamp(currentData.startDate));
             m_GxEPD.println(formatDate(currentData));
@@ -77,7 +185,8 @@ void DisplayModuleTimeLine::FillModule(GxEPD& m_GxEPD)
             {
                 //  strncpy (sentenceToDisplay, currentData.eventDetails, DISPLAYMODULETIMELINE_MAXLENGTHCONTENT);
             }
-            m_GxEPD.setCursor(relativePos.x + DISPLAYMODULETIMELINE_LINEPOS_X, itrData * gridUnit + DISPLAYMODULETIMELINE_HIGHTPIXELLETTER * 2 + deltaStart);
+            m_GxEPD.setCursor(relativePos.x + DISPLAYMODULETIMELINE_LINEPOS_X + DISPLAYMODULETIMELINE_EVENT_LINEPOS_X,
+                              itrData * gridUnit + DISPLAYMODULETIMELINE_HIGHTPIXELLETTER * 2 + deltaStart + DISPLAYMODULETIMELINE_EVENT_LENGTH_Y);
             m_GxEPD.println(sentenceToDisplay);
       }
 }
