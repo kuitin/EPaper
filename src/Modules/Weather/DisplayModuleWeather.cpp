@@ -1,7 +1,6 @@
 #include <Modules/Weather/DisplayModuleWeather.h>
 #include <Fonts/FreeMonoBold9pt7b.h>
 #include <Fonts/FreeMonoBold18pt7b.h>
-#include "utility/BitmapExamples.h"
 #include "utility/IMG_0001.h"
 #include "utility/IMG_0002.h"
 #include "Trad/DisplayEPaperTrad.h"

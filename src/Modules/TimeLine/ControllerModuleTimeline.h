@@ -14,8 +14,7 @@ class ControllerModuleTimeline : public ControllerModule
     ~ControllerModuleTimeline();
     void UpdateData();
     void UpdateDataView();
-    unsigned long  GetTime();
-    void ParseGoogleCalendar();
+    bool ParseGoogleCalendar();
 
 	private :
     DataViewTimeline* m_dataView;

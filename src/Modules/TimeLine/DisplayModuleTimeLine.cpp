@@ -27,13 +27,20 @@ void DisplayModuleTimeLine::FillModule(GxEPD& m_GxEPD)
       Point relativePos = GetPosRelative();
       
       m_GxEPD.drawLine(relativePos.x + DISPLAYMODULETIMELINE_LINEPOS_X, 0, relativePos.x + DISPLAYMODULETIMELINE_LINEPOS_X, GetHeight(), GxEPD_BLACK);
-
+      if(m_viewDatas->listEvent.size() == 0)
+      return;
       // Get all event in a period
       std::vector<DateContent> dataInPeriod;
-      for ( int itrData=0; itrData <  DISPLAYMODULETIMELINE_MAXEVENT; itrData ++ )
+      int maxEventCoutn = m_viewDatas->listEvent.size() <  DISPLAYMODULETIMELINE_MAXEVENT ? m_viewDatas->listEvent.size() : DISPLAYMODULETIMELINE_MAXEVENT;
+      for ( int itrData=0; itrData <  maxEventCoutn; itrData ++ )
       {
+          if((m_viewDatas->listEvent.at(itrData).endDate > m_viewDatas->currentDate &&
+             m_viewDatas->listEvent.at(itrData).startDate < m_viewDatas->currentDate) ||
+             m_viewDatas->listEvent.at(itrData).startDate > m_viewDatas->currentDate )
+          {
             DateContent currentData =  m_viewDatas->listEvent.at(itrData);
             dataInPeriod.push_back(currentData);
+          }
       }      
 
       const GFXfont* f = &FreeSans9pt7b;

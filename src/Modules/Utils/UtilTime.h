@@ -3,7 +3,7 @@
 #include <Modules/DisplayModule.h>
 #include "iostream"
 #include <vector>
-
+#include <TimeLib.h> 
 
 // TODO manage namespace
 struct Time_data
@@ -33,6 +33,7 @@ class UtilTime
     static Time_data makeTimeToDataTime(unsigned long timestamp );
     static DAY_OF_WEEK day_Of_Week(uint16_t year, uint8_t month, uint8_t day);
     static String getDayOfWeekStr(int dayOfWeekNbr);
+    static unsigned long  GetTime(bool & isDSTEnable);
 };
 
 

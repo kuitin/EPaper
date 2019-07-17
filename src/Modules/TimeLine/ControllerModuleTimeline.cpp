@@ -3,6 +3,7 @@
 #include <ArduinoJson.h>
 #include <TimeLib.h> 
 #include "WiFiClientSecure.h"
+#include <Modules/Utils/UtilTime.h>
 
 ControllerModuleTimeline::ControllerModuleTimeline (const String& calandarUrl, int utc) :
     m_flagNeedUpdate(false),
@@ -27,16 +28,13 @@ ControllerModuleTimeline::~ControllerModuleTimeline()
 
 void ControllerModuleTimeline::UpdateData()
 {
-    unsigned long currentTime = GetTime();
+    bool m_isDSTEnable;
+    unsigned long currentTime = UtilTime::GetTime(m_isDSTEnable);
+    m_dataView->m_isDSTEnable = m_isDSTEnable;
     if(currentTime != 0)
     {
-        ParseGoogleCalendar();
-        // std::vector<DateContent> data;
-        // DateContent tempData {currentTime +100,"hello123456789123456777777"};
-        // DateContent tempData2 {currentTime + 200,"hello"};
-        // m_dataView->listEvent.push_back(tempData);
-        // m_dataView->listEvent.push_back(tempData2);
-        // Get Time from server
+        bool isOk = ParseGoogleCalendar();
+        if(!isOk) isOk = ParseGoogleCalendar();
         m_dataView->currentDate = currentTime;
         m_dataView->period = 5256000;
     }
@@ -46,49 +44,27 @@ void ControllerModuleTimeline::UpdateDataView()
 {
     // No need because the datamodel = data = pointer.
 }
-const char* ntpServer = "pool.ntp.org";
-// TODO personalize according countries the UTC and DST
-const long  gmtOffset_sec = 3600;
-const int   daylightOffset_sec = 3600;
-unsigned long  ControllerModuleTimeline::GetTime()
-{
-    unsigned long result = 0;
-    configTime(3600 * m_Utc, daylightOffset_sec, ntpServer);
-    struct tm timeinfo;
-    if(!getLocalTime(&timeinfo)){
-    Serial.println("Failed to obtain time");
-    return 0;
-    }
-    Serial.println(&timeinfo, "%A, %B %d %Y %H:%M:%S");
-    m_isDSTEnable = timeinfo.tm_isdst;
-    m_dataView->m_isDSTEnable = m_isDSTEnable;
-    Serial.println("DST " + String(timeinfo.tm_isdst) );
-    time_t now;
 
-    time(&now);
-    Serial.println(now);
-    return now;
-}
+
  
 const char*  server = "script.google.com";  // Server URL
 // google script key
 const char* key = "AKfycby0T0QaLhodlDRiBNyYSWYwq9bNM-Y17YrzFVeZ8V6im9FL42c"; 
 WiFiClientSecure client;
-void ControllerModuleTimeline::ParseGoogleCalendar()
+bool ControllerModuleTimeline::ParseGoogleCalendar()
 {
-
 
     String movedURL;
     String line;
 
-    if (1)Serial.println("Verbinde zum script.google.com");
+    // if (1)Serial.println("Connection to script.google.com");
     if (!client.connect(server, 443))
     {
-        if (1) Serial.println("Verbindung fehlgeschlagen!");
-        return;
+        if (1) Serial.println("Connection to server failed!");
+        return false;
     }
 
-    if (1) Serial.println("Verbunden!");
+    // if (1) Serial.println("Connecté!");
     // ESP32 Erzeugt HTTPS Anfrage an Google sheets
     client.println("GET " + m_calandarUrl );
     client.println("Host: script.google.com" );
@@ -96,58 +72,67 @@ void ControllerModuleTimeline::ParseGoogleCalendar()
     client.println();
 
      // ESP32 empfängt antwort vom Google sheets
-  while (client.connected())     // ESP32  empfängt Header
+  int timeout = 0;
+  int maxTimeout = 25;
+  while (client.connected() && timeout < maxTimeout )     // ESP32  empfängt Header
   {
     line = client.readStringUntil('\n');
-    if (1) Serial.println(line);
-//    if (line == "\r") return;      // Ende Des Headers empfangen
+    // if (1) Serial.println(line);
+   if (line == "\r") break;      // Ende Des Headers empfangen
     if (line.indexOf ( "Location" ) >= 0)   // Weiterleitung im Header?
     { // Neue URL merken
       movedURL = line.substring ( line.indexOf ( ":" ) + 2 ) ;
      
     }
+    Serial.println(timeout);
+    timeout++;
     
   }
-  Serial.println("movedURL");
-    Serial.println(movedURL);
-
-  while (client.connected())    // Google Antwort HTML Zeilenweise Lesen
+  if(timeout >= maxTimeout) 
   {
-    if (client.available())
-    {
-      line = client.readStringUntil('\r');
-      if (1) Serial.print(line);
-    }
+    Serial.println(" out 1");
+    client.stop();
+    return false;
   }
+  timeout = 0;
   client.stop();
+  if(timeout >= maxTimeout) 
+  {
+    Serial.println("2");
+     return false;
+  }
 
   movedURL.trim(); // leerzeichen, \n entfernen
-  if (1) Serial.println("Weiterleitungs URL: \"" + movedURL + "\"");
 
-//   if (movedURL.length() < 10) return; // Weiterleitung nicht da
-
-  if (1) Serial.println("\n Starte Weiterleitung...");
   if (!client.connect(server, 443))
   {
-    if (1) Serial.println("Weiterleitung fehlgeschlagen!");
-    return;
+    if (1) Serial.println("Connection to server failed!");
+    return false;
   }
 
-  Serial.println("Verbunden!");
   // // ESP32 Erzeugt HTTPS Anfrage an Google Tabellen
   client.println("GET " + movedURL );
   client.println("Host: script.google.com");
   client.println("Connection: close");
   client.println();
-    Serial.print("END ------------ END");
-  while (client.connected()) // ESP32  empfängt Header
+  // Serial.print("END ------------ END");
+  timeout = 0;
+  while (client.connected() && timeout < maxTimeout) // ESP32  empfängt Header
   {
     line = client.readStringUntil('\n');
-    if (1) Serial.println(line);
     if (line == "\r")break;
+    Serial.println(timeout);
+    timeout ++;
+  }
+  if(timeout >= maxTimeout) 
+  {
+    Serial.println("3");
+    client.stop();
+    return false;
   }
   
-  while (client.connected()) // Google Antwort HTML Zeilenweise Lesen
+   timeout = 0;
+  while (client.connected() && timeout < maxTimeout) // Google Antwort HTML Zeilenweise Lesen
   {
     if (client.available())
     {
@@ -157,7 +142,7 @@ void ControllerModuleTimeline::ParseGoogleCalendar()
       JsonObject& root = jsonBuffer.parseObject(line);
       if (!root.success()) {
           Serial.println(F("Parsing failed!"));
-          return;
+          return false;
       }
       JsonArray& arrayCalendar = root["list"].as<JsonArray&>();
       for(JsonVariant currentJson : arrayCalendar) { 
@@ -167,11 +152,19 @@ void ControllerModuleTimeline::ParseGoogleCalendar()
                                 currentJson["title"].as<String>(),
                                 currentJson["isAllDay"].as<bool>()};
           m_dataView->listEvent.push_back(tempData);
-      }
+      }      
       client.stop();
-      if (1) Serial.print(line);
+      // if (1) Serial.print(line);
     }
+    timeout ++;
+  }
+  if(timeout >= maxTimeout) 
+  {
+    Serial.println("4");
+    client.stop();
+    return false;
   }
   client.stop();
-  Serial.print("client stop");
+  return true;
+  // Serial.print("client stop");
 }

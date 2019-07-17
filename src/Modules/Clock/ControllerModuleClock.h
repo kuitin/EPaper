@@ -15,6 +15,7 @@ class ControllerModuleClock : public ControllerModule
 
 	private :
     bool m_flagNeedUpdate;
+    DataViewClock m_viewData;
 
 };
 

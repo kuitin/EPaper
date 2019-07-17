@@ -1,5 +1,6 @@
 #include <Modules/Utils/UtilTime.h>
 #include <Trad/DisplayEPaperTrad.h>
+#include <TimeLib.h> 
 
 static const unsigned char countTime = 15;
 static const unsigned long summerTime [countTime] = { 1553994000,
@@ -131,4 +132,26 @@ String UtilTime::getDayOfWeekStr(int dayOfWeekNbr)
         case DAY_OF_WEEK::Saturday:    return WEATHER_SATURDAY ;
         default :                      return "unknown";
     }
+}
+
+const char* ntpServer = "pool.ntp.org";
+// TODO personalize according countries the UTC and DST
+const long  gmtOffset_sec = 3600;
+const int   daylightOffset_sec = 3600;
+const int   Utc = 1;
+unsigned long  UtilTime::GetTime(bool & isDSTEnable)
+{
+    unsigned long result = 0;
+    configTime(3600 * Utc, daylightOffset_sec, ntpServer);
+    struct tm timeinfo;
+    if(!getLocalTime(&timeinfo)){
+    Serial.println("Failed to obtain time");
+    
+    }
+    isDSTEnable = timeinfo.tm_isdst;
+    time_t now;
+
+    time(&now);
+    Serial.println(now);
+    return now;
 }
