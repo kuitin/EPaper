@@ -13,10 +13,10 @@ ControllerModuleClock::ControllerModuleClock (const ModuleDimmensions & dimensio
 
 void ControllerModuleClock::UpdateData()
 {
-    bool m_isDSTEnable;
-    unsigned long currentTime = UtilTime::GetTime(m_isDSTEnable);
+    bool isDSTEnable = false;
+    unsigned long currentTime = UtilTime::GetTime(isDSTEnable);
     tmElements_t newTimeDate;
-            breakTime(currentTime, newTimeDate);
+    breakTime(currentTime + isDSTEnable*3600, newTimeDate);
     m_viewData.dayNumber = newTimeDate.Day;
     m_viewData.dayName = dayStr(newTimeDate.Wday);
     m_viewData.month = monthStr(newTimeDate.Month);

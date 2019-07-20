@@ -250,7 +250,7 @@ String DisplayModuleTimeLine::formatDate(DateContent currentData ){
             // Later
             tmElements_t tm;
             breakTime(currentData.startDate + m_viewDatas->m_isDSTEnable*3600 + m_viewDatas->utc * 3600 , tm);
-            return String(tm.Day) + "-" + String(tm.Month) + "-" + String(1970 + tm.Year) + " " + String(tm.Hour) + ":" + String(tm.Minute);
+            return String(tm.Day) + " " + String(monthStr(tm.Month)) ;
         }     
     }
     else
@@ -288,7 +288,7 @@ String DisplayModuleTimeLine::formatDate(DateContent currentData ){
             // Later
             tmElements_t tm;
             breakTime(currentData.startDate + m_viewDatas->m_isDSTEnable*3600 + m_viewDatas->utc * 3600 , tm);
-            return String(tm.Day) + "-" + String(tm.Month) + "-" + String(1970 + tm.Year) + " " + String(tm.Hour) + ":" + String(tm.Minute);
+            return String(tm.Day) + " " + String(monthStr(tm.Month)) + " " + String(tm.Hour) + ":" + String(tm.Minute);
         }   
     }
     

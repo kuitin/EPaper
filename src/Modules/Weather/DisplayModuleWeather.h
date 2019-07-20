@@ -42,12 +42,22 @@ class DataViewWeatherOfFullDay
 class DataViewWeather 
 {
     public:
-    DataViewWeather() {}
     double TemperatureIn;
     double TemperatureOut;
     double Pression;
     IconWeatherImage::IconWeater weather;
     DataViewWeatherOfFullDay weekWeather [MAX_DAY_WEATHER];
+    DataViewWeather(): TemperatureIn(0),TemperatureOut(0), Pression(0), weather(IconWeatherImage::unkonwn){
+        for (int itr = 0; itr < MAX_DAY_WEATHER ; itr ++)
+        {
+            weekWeather[itr].TemperatureMin = 0;
+            weekWeather[itr].TemperatureMax = 0;
+            weekWeather[itr].weatherMorning = IconWeatherImage::unkonwn;
+            weekWeather[itr].weatherAfternoon = IconWeatherImage::unkonwn;
+            weekWeather[itr].DayOfWeek = DAY_OF_WEEK::Sunday;
+        }
+    }
+    
     
 };
 

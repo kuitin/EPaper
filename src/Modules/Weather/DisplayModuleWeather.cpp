@@ -30,6 +30,7 @@ void DisplayModuleWeather::FillModule(GxEPD& m_GxEPD)
       m_GxEPD.drawExampleBitmap(iconWeather, relativePos.x + 130, relativePos.y + 3, config.width, config.height, GxEPD_BLACK);
       
       // Display weather of the weekWeather
+      // int maxDayDisplay = m_dataViewWeather->weekWeather.size() < MAX_DAY_WEATHER : 0 ? MAX_DAY_WEATHER;
       for (int itrDay = 0; itrDay < MAX_DAY_WEATHER ; itrDay ++ )
       {
             m_GxEPD.setCursor(relativePos.x, relativePos.y + 130 + itrDay*25);

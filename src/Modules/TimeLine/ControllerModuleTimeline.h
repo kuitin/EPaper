@@ -15,6 +15,7 @@ class ControllerModuleTimeline : public ControllerModule
     void UpdateData();
     void UpdateDataView();
     bool ParseGoogleCalendar();
+    virtual Posistion PositionModule() {return none;}
 
 	private :
     DataViewTimeline* m_dataView;

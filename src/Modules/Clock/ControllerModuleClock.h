@@ -12,6 +12,7 @@ class ControllerModuleClock : public ControllerModule
     ~ControllerModuleClock(){}
     void UpdateData();
     void UpdateDataView();
+    virtual Posistion PositionModule() {return topMiddle;}
 
 	private :
     bool m_flagNeedUpdate;

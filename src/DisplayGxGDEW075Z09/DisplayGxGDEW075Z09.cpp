@@ -39,22 +39,47 @@ void DisplayGxGDEW075Z09::DrawModules()
             DisplayModule* currentView = module->getView();
             if(currentView != nullptr)
             {
-                if(GxGDEW075Z09_WIDTH < (positionNextModule.x + currentView->GetThickness() + currentView->GetWidth()))
+                if(module->PositionModule()  == ControllerModule::bottomMiddle)
                 {
-                    // Change Line
-                    positionNextModule.y += currentView->GetHeight();
-                    positionNextModule.x = 0;
+                    currentcontext->setCursor(positionNextModule.x, GxGDEW075Z09_HEIGHT - currentView->GetHeight());
+                    currentcontext->drawRect(positionNextModule.x, GxGDEW075Z09_HEIGHT - currentView->GetHeight(), currentView->GetWidth(), currentView->GetHeight(), GxEPD_BLACK);
+                    // Update relative position:
+                    currentView->UpdateRelativePos(positionNextModule.x + currentView->GetThickness(), GxGDEW075Z09_HEIGHT - currentView->GetHeight());
+                    //currentView->UpdateViewData(ModelData);
+                    currentView->FillModule(*currentcontext);
+                    // positionNextModule.x += currentView->GetWidth();
+                    // positionNextModule.y += GxGDEW075Z09_HEIGHT- currentView->GetHeight();
                 }
-                currentcontext->setCursor(positionNextModule.x, positionNextModule.y);
-                currentcontext->drawRect(positionNextModule.x, positionNextModule.y, currentView->GetWidth(), currentView->GetHeight(), GxEPD_BLACK);
-                // Update relative position:
-                currentView->UpdateRelativePos(positionNextModule.x + currentView->GetThickness(), positionNextModule.y);
-                //currentView->UpdateViewData(ModelData);
-                currentView->FillModule(*currentcontext);
+                else if(module->PositionModule()  == ControllerModule::topMiddle)
+                {
+                    currentcontext->setCursor(positionNextModule.x, positionNextModule.y);
+                    currentcontext->drawRect(positionNextModule.x, positionNextModule.y, currentView->GetWidth(), currentView->GetHeight(), GxEPD_BLACK);
+                    // Update relative position:
+                    currentView->UpdateRelativePos(positionNextModule.x + currentView->GetThickness(), positionNextModule.y);
+                    //currentView->UpdateViewData(ModelData);
+                    currentView->FillModule(*currentcontext);
+                    positionNextModule.x += currentView->GetWidth();
+                    // positionNextModule.y += currentView->GetHeight();
+                }
+                else
+                {       
+                    if(GxGDEW075Z09_WIDTH < (positionNextModule.x + currentView->GetThickness() + currentView->GetWidth()))
+                    {
+                        // Change Line
+                        positionNextModule.y += currentView->GetHeight();
+                        positionNextModule.x = 0;
+                    }
+                    currentcontext->setCursor(positionNextModule.x, positionNextModule.y);
+                    currentcontext->drawRect(positionNextModule.x, positionNextModule.y, currentView->GetWidth(), currentView->GetHeight(), GxEPD_BLACK);
+                    // Update relative position:
+                    currentView->UpdateRelativePos(positionNextModule.x + currentView->GetThickness(), positionNextModule.y);
+                    //currentView->UpdateViewData(ModelData);
+                    currentView->FillModule(*currentcontext);
 
-                // Compute next position of the module
+                    // Compute next position of the module
 
-                positionNextModule.x += currentView->GetWidth();
+                    positionNextModule.x += currentView->GetWidth();
+                }
             }
         }
 

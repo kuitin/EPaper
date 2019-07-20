@@ -22,6 +22,7 @@ ControllerModuleWeather::~ControllerModuleWeather()
 
 void ControllerModuleWeather::GetServerData(String forecastURL)
 {
+    
         HTTPClient http;
 
         // configure traged server and url

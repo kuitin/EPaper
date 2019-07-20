@@ -9,14 +9,14 @@ void DisplayModuleClock::FillModule(GxEPD& m_GxEPD)
       const GFXfont* f12 = &FreeMonoBold12pt7b;
       m_GxEPD.setFont(f12);
       m_GxEPD.setTextColor(GxEPD_WHITE);
-      m_GxEPD.setCursor(relativePos.x + 17, relativePos.y + 20 );
+      m_GxEPD.setCursor(relativePos.x + 30, relativePos.y + 20 );
       m_GxEPD.setTextSize(1);
       m_GxEPD.println(m_dataView->dayName);
 
       const GFXfont* f = &FreeMonoBold24pt7b;
       m_GxEPD.setFont(f);
       m_GxEPD.setTextColor(GxEPD_RED);
-      m_GxEPD.setCursor(relativePos.x + 55, relativePos.y + 55 );
+      m_GxEPD.setCursor(relativePos.x + 64, relativePos.y + 55 );
       m_GxEPD.setTextSize(1);
       m_GxEPD.println(m_dataView->dayNumber);
 
