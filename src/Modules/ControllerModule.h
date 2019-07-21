@@ -5,7 +5,7 @@
 class ControllerModule 
 {
 	public:
-    enum Posistion { topMiddle, bottomMiddle, none };
+    enum Posistion { topMiddle, bottomMiddle, topRight, none };
 
     explicit ControllerModule() : m_view(nullptr), m_newData(false){}
     ~ControllerModule();

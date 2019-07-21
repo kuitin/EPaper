@@ -61,8 +61,18 @@ void DisplayGxGDEW075Z09::DrawModules()
                     positionNextModule.x += currentView->GetWidth();
                     // positionNextModule.y += currentView->GetHeight();
                 }
-                else
-                {       
+                else if(module->PositionModule()  == ControllerModule::topRight)
+                {
+                    currentcontext->setCursor(positionNextModule.x, positionNextModule.y);
+                    currentcontext->drawRect(positionNextModule.x, positionNextModule.y, currentView->GetWidth(), currentView->GetHeight(), GxEPD_BLACK);
+                    // Update relative position:
+                    currentView->UpdateRelativePos(positionNextModule.x + currentView->GetThickness(), positionNextModule.y);
+                    //currentView->UpdateViewData(ModelData);
+                    currentView->FillModule(*currentcontext);
+                    positionNextModule.x += currentView->GetWidth();
+                    // positionNextModule.y += currentView->GetHeight();
+                }
+                else{       
                     if(GxGDEW075Z09_WIDTH < (positionNextModule.x + currentView->GetThickness() + currentView->GetWidth()))
                     {
                         // Change Line

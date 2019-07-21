@@ -12,6 +12,7 @@
 #include <HTTPClient.h>
 #include <ArduinoJson.h>
 #include "Modules/Weather/ControllerModuleWeather.h"
+#include <Modules/Image/ControllerModuleImage.h>
 
 class DisplayEPaper 
 {
@@ -27,6 +28,7 @@ class DisplayEPaper
 	virtual void UpdateAllDatas();
 	virtual void UpdateAllViewwDatas();
 	virtual bool NeedUpdateScreen();
+	virtual void TestAddNewImageModule(int cornerThickness, int width, int height, const String & imageUrl);
 
 	private:
 

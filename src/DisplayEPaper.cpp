@@ -65,3 +65,10 @@ bool DisplayEPaper::NeedUpdateScreen()
     }
     return needUpdate;
 }
+
+void DisplayEPaper::TestAddNewImageModule(int cornerThickness, int width, int height, const String & imageUrl)
+{
+    ControllerModuleImage* currentModule = new ControllerModuleImage(ModuleDimmensions(width, height, cornerThickness),
+                                                                    imageUrl);
+    AddNewModule(currentModule);
+}
