@@ -13,6 +13,7 @@ class ControllerModuleImage : public ControllerModule
     void UpdateData();
     void UpdateDataView();
     virtual Posistion PositionModule() {return topRight;}
+    bool GetDataFromGoogle();
 
 	private :
     bool m_flagNeedUpdate;

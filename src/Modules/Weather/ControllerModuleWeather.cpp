@@ -135,17 +135,45 @@ IconWeatherImage::IconWeater ControllerModuleWeather::IconCodeToIconImg(String i
     {
         result = IconWeatherImage::sun;
     }
-    else if( iconTable == "02d" || iconTable == "02n" || iconTable == "04d")
+    else if( iconTable == "02d" || iconTable == "02n" )
+    {
+        result = IconWeatherImage::MostlySunny;
+    }
+    else if( iconTable == "03d" || iconTable == "03n" )
     {
         result = IconWeatherImage::cloud;
+    }
+    else if( iconTable == "04d" || iconTable == "04n" )
+    {
+        result = IconWeatherImage::brokenCloud;
+    }
+     else if( iconTable == "09d" || iconTable == "09n")
+    {
+        result = IconWeatherImage::ChanceRain;
     }
     else if( iconTable == "10d" || iconTable == "10n")
     {
         result = IconWeatherImage::rain;
     }
+    else if( iconTable == "11d" || iconTable == "11n")
+    {
+        result = IconWeatherImage::Tstorms;
+    }
+    else if( iconTable == "13d" || iconTable == "13n")
+    {
+        result = IconWeatherImage::Snow;
+    }
+    else if( iconTable == "50d" )
+    {
+        result = IconWeatherImage::Haze;
+    }
+    else if( iconTable == "50n" )
+    {
+        result = IconWeatherImage::Fog;
+    }
     else
     {
-        result = IconWeatherImage::rain;
+        result = IconWeatherImage::unkonwn;
     }
 			// "01d": "wi-day-sunny",
 			// "02d": "wi-day-cloudy",

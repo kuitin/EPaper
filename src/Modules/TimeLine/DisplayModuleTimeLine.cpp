@@ -183,8 +183,8 @@ void DisplayModuleTimeLine::FillModule(GxEPD& m_GxEPD)
             String sentenceToDisplay ( currentData.eventDetails);
             if ( sentenceToDisplay.length() > DISPLAYMODULETIMELINE_MAXLENGTHCONTENT )
             {
-                  sentenceToDisplay.remove( DISPLAYMODULETIMELINE_MAXLENGTHCONTENT , sentenceToDisplay.length() );
-                  sentenceToDisplay += "...";
+                sentenceToDisplay.remove( DISPLAYMODULETIMELINE_MAXLENGTHCONTENT , sentenceToDisplay.length() );
+                sentenceToDisplay += "...";
                  // strncpy (sentenceToDisplay, currentData.eventDetails, DISPLAYMODULETIMELINE_MAXLENGTHCONTENT);
                  // strncat (sentenceToDisplay, "...\0", DISPLAYMODULETIMELINE_LENGTHCONTENT);
             }
@@ -195,7 +195,7 @@ void DisplayModuleTimeLine::FillModule(GxEPD& m_GxEPD)
             m_GxEPD.setCursor(relativePos.x + DISPLAYMODULETIMELINE_LINEPOS_X + DISPLAYMODULETIMELINE_EVENT_LINEPOS_X,
                               itrData * gridUnit + DISPLAYMODULETIMELINE_HIGHTPIXELLETTER * 2 + deltaStart + DISPLAYMODULETIMELINE_EVENT_LENGTH_Y);
             m_GxEPD.println(sentenceToDisplay);
-      }
+    }
 }
 #define TIMELINE_TODAY "Today"
 #define TIMELINE_TOMORROW "Tomorrow"
@@ -213,7 +213,9 @@ String DisplayModuleTimeLine::formatDate(DateContent currentData ){
     if(currentData.isAllDay == true)
     {
         
-        
+        long timeStampDelta = + m_viewDatas->m_isDSTEnable*3600 + m_viewDatas->utc * 3600;
+        currentData.startDate += timeStampDelta;
+        currentData.endDate += timeStampDelta;
         if(currentData.startDate < morningTimestamp)
         {
             Serial.println("morningTimestamp " + String(morningTimestamp) );
@@ -226,60 +228,69 @@ String DisplayModuleTimeLine::formatDate(DateContent currentData ){
         }
         // Today
         else if(currentData.startDate >= morningTimestamp &&
-                currentData.startDate < morningTimestamp + 24*60*60)
+                currentData.startDate < (morningTimestamp + 24*60*60 ) ) 
         {
+            Serial.println("morningTimestamp  " + String(morningTimestamp + 24*60*60 ) );
+             Serial.println("currentData.startDate " + String(currentData.startDate) );
             // Start Today
             return TIMELINE_TODAY;
         }
         else if(currentData.startDate >= morningTimestamp + 24*60*60 &&
-                currentData.startDate < morningTimestamp + 24*60*60*2){
+                currentData.startDate < (morningTimestamp + 24*60*60*2 ) ){
             // Start Tomorrow
             return TIMELINE_TOMORROW;
         }
         else if(currentData.startDate >= morningTimestamp + 24*60*60*2 &&
-                currentData.startDate < morningTimestamp + 24*60*60*5){
+                currentData.startDate < (morningTimestamp + 24*60*60*5 ) ){
             // Start Day in week
             tmElements_t newTimeDate;
-            breakTime(currentData.startDate + m_viewDatas->m_isDSTEnable*3600 + m_viewDatas->utc * 3600, newTimeDate);
+            breakTime(currentData.startDate, newTimeDate);
             // Time_data newTimeDate =  UtilTime::makeTimeToDataTime(currentData.startDate);
             // DAY_OF_WEEK currentDay = UtilTime::day_Of_Week( newTimeDate.year,  newTimeDate.month, newTimeDate.day);
-            return dayStr(newTimeDate.Day);// UtilTime::getDayOfWeekStr(currentDay);
+            // Serial.println("Day in week");
+            // Serial.println(newTimeDate.Day);
+            // Serial.println(dayStr(newTimeDate.Day));
+            return dayStr(newTimeDate.Wday);// UtilTime::getDayOfWeekStr(currentDay);
         }
         else
         {
             // Later
             tmElements_t tm;
             breakTime(currentData.startDate + m_viewDatas->m_isDSTEnable*3600 + m_viewDatas->utc * 3600 , tm);
+            // Serial.println(String(tm.Day) + " " + String(monthStr(tm.Month)));
             return String(tm.Day) + " " + String(monthStr(tm.Month)) ;
         }     
     }
     else
     {
+         long timeStampDelta = + m_viewDatas->m_isDSTEnable*3600 + m_viewDatas->utc * 3600;
+        currentData.startDate += timeStampDelta;
+        currentData.endDate += timeStampDelta;
          // Today
-         Serial.println("morningTimestamp " + String(morningTimestamp) );
-         Serial.println("currentData.startDate " + String(currentData.startDate) );
+        Serial.println("morningTimestamp " + String(morningTimestamp) );
+        Serial.println("currentData.startDate " + String(currentData.startDate) );
         if(currentData.startDate >= morningTimestamp &&
-           currentData.startDate < morningTimestamp + 24*60*60)
+            currentData.startDate < (morningTimestamp + 24*60*60  ) )
         {
             // Start Today
             tmElements_t newTimeDate;
-            breakTime(currentData.startDate + m_viewDatas->m_isDSTEnable*3600 + m_viewDatas->utc * 3600, newTimeDate);
+            breakTime(currentData.startDate , newTimeDate);
             String message = String(TIMELINE_TODAY) + " " + String(newTimeDate.Hour) + ":" + String(newTimeDate.Minute);
             return message;
         }
         else if(currentData.startDate >= morningTimestamp + 24*60*60 &&
-                currentData.startDate < morningTimestamp + 24*60*60*2){
+                currentData.startDate < (morningTimestamp + 24*60*60*2 ) ){
             // Start Tomorrow
             tmElements_t newTimeDate;
-            breakTime(currentData.startDate + m_viewDatas->m_isDSTEnable*3600 + m_viewDatas->utc * 3600, newTimeDate);
+            breakTime(currentData.startDate , newTimeDate);
             String message = String(TIMELINE_TOMORROW) + " " + String(newTimeDate.Hour) + ":" + String(newTimeDate.Minute);
             return message;
         }
         else if(currentData.startDate >= morningTimestamp + 24*60*60*2 &&
-                currentData.startDate < morningTimestamp + 24*60*60*7){
+                currentData.startDate < (morningTimestamp + 24*60*60*7 ) ){
             // Start Day in week
             tmElements_t newTimeDate;
-            breakTime(currentData.startDate + m_viewDatas->m_isDSTEnable*3600 + m_viewDatas->utc * 3600, newTimeDate);
+            breakTime(currentData.startDate , newTimeDate);
             String message = String(dayStr(newTimeDate.Wday)) + " " + String(newTimeDate.Hour) + ":" + String(newTimeDate.Minute);
             return message;
         }
@@ -287,7 +298,7 @@ String DisplayModuleTimeLine::formatDate(DateContent currentData ){
         {
             // Later
             tmElements_t tm;
-            breakTime(currentData.startDate + m_viewDatas->m_isDSTEnable*3600 + m_viewDatas->utc * 3600 , tm);
+            breakTime(currentData.startDate  , tm);
             return String(tm.Day) + " " + String(monthStr(tm.Month)) + " " + String(tm.Hour) + ":" + String(tm.Minute);
         }   
     }

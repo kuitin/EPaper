@@ -2,14 +2,30 @@
 #define _DisplayModuleWeather_H_
 #include "Modules/DisplayModule.h"
 #include "svg/header/wi-cloudy.h"
+#include "svg/header/wi-cloud.h"
 #include "svg/header/wi-hail.h"
 #include "svg/header/wi-day-sunny.h"
 #include "svg/header/wi-alien.h"
+#include "svg/header/wi-day-fog.h"
+#include "svg/header/wi-day-haze.h"
+#include "svg/header/wi-day-lightning.h"
+#include "svg/header/wi-day-rain-mix.h"
+#include "svg/header/wi-day-snow.h"
+#include "svg/header/wi-rain.h"
+#include "svg/header/wi-day-cloudy.h"
 
 #include "svg/headerLowDef/wi-cloudy.h"
+#include "svg/headerLowDef/wi-cloud.h"
 #include "svg/headerLowDef/wi-hail.h"
 #include "svg/headerLowDef/wi-day-sunny.h"
 #include "svg/headerLowDef/wi-alien.h"
+#include "svg/headerLowDef/wi-day-fog.h"
+#include "svg/headerLowDef/wi-day-haze.h"
+#include "svg/headerLowDef/wi-day-lightning.h"
+#include "svg/headerLowDef/wi-day-rain-mix.h"
+#include "svg/headerLowDef/wi-day-snow.h"
+#include "svg/headerLowDef/wi-rain.h"
+#include "svg/headerLowDef/wi-day-cloudy.h"
 
 #include <Modules/Utils/UtilTime.h>
 
@@ -21,9 +37,16 @@ class IconWeatherImage
     public:
     enum IconWeater
     {
+        MostlySunny,
         cloud,
+        brokenCloud,
+        ChanceRain,
         rain,
         sun,
+        Tstorms,
+        Snow,
+        Haze,
+        Fog,
         none,
         unkonwn
     };

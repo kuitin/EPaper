@@ -64,6 +64,18 @@ const uint8_t* DisplayModuleWeather::weatherToIcon(IconWeatherImage::IconWeater 
             case IconWeatherImage::cloud:
                   if(lowDef)
                   {
+                        *config = wicloud_Low;
+                        return image_data_wicloud_Low;
+                  }else
+                  {
+                        *config = wicloud;
+                        return image_data_wicloud;
+                  }
+            break;
+
+            case IconWeatherImage::brokenCloud:
+                  if(lowDef)
+                  {
                         *config = wicloudy_Low;
                         return image_data_wicloudy_Low;
                   }else
@@ -73,27 +85,99 @@ const uint8_t* DisplayModuleWeather::weatherToIcon(IconWeatherImage::IconWeater 
                   }
             break;
 
-            case IconWeatherImage::rain:
+            case IconWeatherImage::ChanceRain:
                   if(lowDef)
                   {
-                        *config = wihail_low;
-                        return image_data_wihail_low;
+                        *config = wirain_Low;
+                        return image_data_wirain_Low;
                   }else
                   {
-                        *config = wihail;
-                        return image_data_wihail;
+                        *config = wirain;
+                        return image_data_wirain;
                   }
             break;
 
             case IconWeatherImage::sun:
                   if(lowDef)
                   {
-                        *config = widaysunny_low;
-                        return image_data_widaysunny_low;
+                        *config = widaysunny_Low;
+                        return image_data_widaysunny_Low;
                   }else
                   {
                         *config = widaysunny;
                         return image_data_widaysunny;
+                  }
+            break;
+
+            case IconWeatherImage::MostlySunny:
+                  if(lowDef)
+                  {
+                         *config = widaycloudy_Low;
+                        return image_data_widaycloudy_Low;
+                  }else
+                  {
+                        *config = widaycloudy;
+                        return image_data_widaycloudy;
+                  }
+            break;
+
+            case IconWeatherImage::rain:
+                  if(lowDef)
+                  {
+                         *config = widayrainmix_Low;
+                        return image_data_widayrainmix_Low;
+                  }else
+                  {
+                        *config = widayrainmix;
+                        return image_data_widayrainmix;
+                  }
+            break;
+
+            case IconWeatherImage::Tstorms:
+                  if(lowDef)
+                  {
+                         *config = widaylightning_Low;
+                        return image_data_widaylightning_Low;
+                  }else
+                  {
+                        *config = widaylightning;
+                        return image_data_widaylightning;
+                  }
+            break;
+
+            case IconWeatherImage::Snow:
+                  if(lowDef)
+                  {
+                         *config = widaysnow_Low;
+                        return image_data_widaysnow_Low;
+                  }else
+                  {
+                        *config = widaysnow;
+                        return image_data_widaysnow;
+                  }
+            break;
+
+             case IconWeatherImage::Haze:
+                  if(lowDef)
+                  {
+                         *config = widayhaze_Low;
+                        return image_data_widayhaze_Low;
+                  }else
+                  {
+                        *config = widayhaze;
+                        return image_data_widayhaze;
+                  }
+            break;
+
+             case IconWeatherImage::Fog:
+                  if(lowDef)
+                  {
+                         *config = widayfog_Low;
+                        return image_data_widayfog_Low;
+                  }else
+                  {
+                        *config = widayfog;
+                        return image_data_widayfog;
                   }
             break;
 
