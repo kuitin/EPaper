@@ -65,12 +65,15 @@ class DataViewWeatherOfFullDay
 class DataViewWeather 
 {
     public:
-    double TemperatureIn;
+    float TemperatureIn;
     double TemperatureOut;
     double Pression;
+    int eCO2; // ppm
+    int TVOC; //ppb
+    float humidity;
     IconWeatherImage::IconWeater weather;
     DataViewWeatherOfFullDay weekWeather [MAX_DAY_WEATHER];
-    DataViewWeather(): TemperatureIn(0),TemperatureOut(0), Pression(0), weather(IconWeatherImage::unkonwn){
+    DataViewWeather(): TemperatureIn(0),TemperatureOut(0), Pression(0), eCO2(0), TVOC(0), humidity(0), weather(IconWeatherImage::unkonwn){
         for (int itr = 0; itr < MAX_DAY_WEATHER ; itr ++)
         {
             weekWeather[itr].TemperatureMin = 0;
@@ -88,7 +91,7 @@ class DataViewWeather
 class DisplayModuleWeather : public DisplayModule 
 {
 	public:
-    DisplayModuleWeather(DataViewWeather* dataViewWeather ) :  DisplayModule( ModuleDimmensions(225,  245, 1)), m_dataViewWeather(dataViewWeather){};
+    DisplayModuleWeather(DataViewWeather* dataViewWeather ) :  DisplayModule( ModuleDimmensions(225,  265, 1)), m_dataViewWeather(dataViewWeather){};
     const uint8_t* weatherToIcon(IconWeatherImage::IconWeater value, tImage * config, bool lowDef = false);
     void FillModule(GxEPD& m_GxEPD);
     void updateViewData();

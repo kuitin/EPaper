@@ -115,12 +115,24 @@ void ControllerModuleWeather::CollectWeatherOfWeek(JsonArray& array)
             // we update the icon as long as it's somewhere during the day.
             if ( Hour <= 12 ) {
                 // Serial.printf(" icon m =%s\n",  currentJson["weather"][0]["icon"].as<char*>());
-                m_dataWeather->weekWeather[itrDay].weatherMorning   = IconCodeToIconImg(currentJson["weather"][0]["icon"].as<char*>());
+                if(m_dataWeather->weekWeather[itrDay].weatherMorning != IconWeatherImage::ChanceRain && // If it rains we keep this logo
+                   m_dataWeather->weekWeather[itrDay].weatherMorning != IconWeatherImage::rain && 
+                   m_dataWeather->weekWeather[itrDay].weatherMorning != IconWeatherImage::Tstorms &&
+                   m_dataWeather->weekWeather[itrDay].weatherMorning != IconWeatherImage::Snow)
+                   {
+                        m_dataWeather->weekWeather[itrDay].weatherMorning   = IconCodeToIconImg(currentJson["weather"][0]["icon"].as<char*>());
+                   }
             }
             else
             {
                 // Serial.printf(" icon a =%s\n",  currentJson["weather"][0]["icon"].as<char*>());
-                m_dataWeather->weekWeather[itrDay].weatherAfternoon   = IconCodeToIconImg(currentJson["weather"][0]["icon"].as<char*>());
+                if(m_dataWeather->weekWeather[itrDay].weatherAfternoon != IconWeatherImage::ChanceRain && // If it rains we keep this logo
+                   m_dataWeather->weekWeather[itrDay].weatherAfternoon != IconWeatherImage::rain && 
+                   m_dataWeather->weekWeather[itrDay].weatherAfternoon != IconWeatherImage::Tstorms &&
+                   m_dataWeather->weekWeather[itrDay].weatherAfternoon != IconWeatherImage::Snow)
+                   {
+                        m_dataWeather->weekWeather[itrDay].weatherAfternoon   = IconCodeToIconImg(currentJson["weather"][0]["icon"].as<char*>());
+                   }
             }
             
         }        

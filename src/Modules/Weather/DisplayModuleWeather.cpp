@@ -1,5 +1,6 @@
 #include <Modules/Weather/DisplayModuleWeather.h>
 #include <Fonts/FreeMonoBold9pt7b.h>
+#include <Fonts/FreeMono9pt7b.h>
 #include <Fonts/FreeMonoBold18pt7b.h>
 #include "utility/IMG_0001.h"
 #include "utility/IMG_0002.h"
@@ -22,9 +23,22 @@ void DisplayModuleWeather::FillModule(GxEPD& m_GxEPD)
       m_GxEPD.setCursor(relativePos.x, relativePos.y + 50 );
       m_GxEPD.println(String(m_dataViewWeather->TemperatureOut, 1 ) );
       
+      const GFXfont* f_light = &FreeMono9pt7b;
+      m_GxEPD.setFont(f_light);
+      m_GxEPD.setCursor(relativePos.x, relativePos.y + 78 );
+      m_GxEPD.println(String(WEATHER_TEMPERATUREINDOOR));
+      m_GxEPD.setCursor(relativePos.x, relativePos.y + 98 );
+      m_GxEPD.println("  " + String(m_dataViewWeather->eCO2 ) + " ppm"  );
+      m_GxEPD.setCursor(relativePos.x + 140, relativePos.y + 98 );
+      m_GxEPD.println(String(m_dataViewWeather->TVOC ) + " ppb");
+
+      m_GxEPD.setFont(f_light);
+      m_GxEPD.setCursor(relativePos.x, relativePos.y + 118 );
+      m_GxEPD.println("  " + String(m_dataViewWeather->TemperatureIn, 2 ) + "C" );
+      m_GxEPD.setCursor(relativePos.x + 140, relativePos.y + 118 );
+      m_GxEPD.println( String(m_dataViewWeather->humidity, 2 ) + "%");
+      
       m_GxEPD.setFont(f);
-      m_GxEPD.setCursor(relativePos.x, relativePos.y + 100 );
-      m_GxEPD.println(String(WEATHER_TEMPERATUREINDOOR) + String(m_dataViewWeather->TemperatureIn, 1 ) + "C" );
       tImage config;
       const uint8_t* iconWeather =  weatherToIcon(m_dataViewWeather->weather, &config);
       m_GxEPD.drawExampleBitmap(iconWeather, relativePos.x + 130, relativePos.y + 3, config.width, config.height, GxEPD_BLACK);
@@ -33,19 +47,19 @@ void DisplayModuleWeather::FillModule(GxEPD& m_GxEPD)
       // int maxDayDisplay = m_dataViewWeather->weekWeather.size() < MAX_DAY_WEATHER : 0 ? MAX_DAY_WEATHER;
       for (int itrDay = 0; itrDay < MAX_DAY_WEATHER ; itrDay ++ )
       {
-            m_GxEPD.setCursor(relativePos.x, relativePos.y + 130 + itrDay*25);
+            m_GxEPD.setCursor(relativePos.x, relativePos.y + 143 + itrDay*25);
             if(m_dataViewWeather->weekWeather[itrDay].weatherMorning != IconWeatherImage::none)
             {
                   tImage configMorning;
                   const uint8_t* iconWeatherMorning = weatherToIcon(m_dataViewWeather->weekWeather[itrDay].weatherMorning, &configMorning, true);
-                  m_GxEPD.drawExampleBitmap(iconWeatherMorning, relativePos.x + 40, relativePos.y + 110 + itrDay*25, 
+                  m_GxEPD.drawExampleBitmap(iconWeatherMorning, relativePos.x + 40, relativePos.y + 123 + itrDay*25, 
                                           configMorning.width, configMorning.height, GxEPD_BLACK);
             }
             if(m_dataViewWeather->weekWeather[itrDay].weatherAfternoon != IconWeatherImage::none)
             {
                   tImage configAfternoon;
                   const uint8_t* iconWeatherAfternoon = weatherToIcon(m_dataViewWeather->weekWeather[itrDay].weatherAfternoon, &configAfternoon, true);
-                  m_GxEPD.drawExampleBitmap(iconWeatherAfternoon, relativePos.x + 75, relativePos.y + 110 + itrDay*25, 
+                  m_GxEPD.drawExampleBitmap(iconWeatherAfternoon, relativePos.x + 75, relativePos.y + 123 + itrDay*25, 
                                             configAfternoon.width, configAfternoon.height, GxEPD_BLACK);
             }
             m_GxEPD.println(String(UtilTime::getDayOfWeekStr(m_dataViewWeather->weekWeather[itrDay].DayOfWeek)) + "       " +

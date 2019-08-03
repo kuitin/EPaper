@@ -8,6 +8,7 @@
 #define TIMELINE_TITLE "Time Line"
 
 #define WEATHER_TEMPERATUREINDOOR "Indoor: "
+#define WEATHER_AIRQUALITYINDOOR "Air quality: "
 
 #define WEATHER_MONDAY "Mon"
 #define WEATHER_SUNDAY "Sun"

@@ -12,6 +12,11 @@ class ControllerModuleWeather : public ControllerModule
     void UpdateData();
     void UpdateDataView();
     ~ControllerModuleWeather();
+     // Setter
+    void SeteCO2(int newValue){m_dataWeather->eCO2 = newValue;}
+    void SetTVOC(int newValue){m_dataWeather->TVOC = newValue;}
+    void SetTemperatureIn(float newValue){m_dataWeather->TemperatureIn = newValue;}
+    void SetHumidity(float newValue){m_dataWeather->humidity = newValue;}
 
 	private :
     void GetServerData(String forecastURL);
@@ -21,6 +26,7 @@ class ControllerModuleWeather : public ControllerModule
     IconWeatherImage::IconWeater IconCodeToIconImg(String iconTable);
     void CollectWeatherOfWeek(JsonArray& array);
 
+   
 };
 
 

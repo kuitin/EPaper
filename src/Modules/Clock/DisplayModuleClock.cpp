@@ -18,15 +18,15 @@ void DisplayModuleClock::FillModule(GxEPD& m_GxEPD)
       m_GxEPD.setFont(f);
       m_GxEPD.setTextColor(GxEPD_RED);
       dayOffsetx = (double)m_dataView->dayNumber > 10 ? 2 : 1;
-      m_GxEPD.setCursor(relativePos.x + GetWidth()/2 - (dayOffsetx/2.0)*30, relativePos.y + 55 );
+      m_GxEPD.setCursor(relativePos.x + GetWidth()/2 - (dayOffsetx/2.0)*30, relativePos.y + 65 );
       m_GxEPD.setTextSize(1);
       m_GxEPD.println(m_dataView->dayNumber);
 
       m_GxEPD.setFont(f12);
       m_GxEPD.setTextColor(GxEPD_WHITE);
-      String monthAndYear = String(m_dataView->month) + "   " + String(m_dataView->year);
+      String monthAndYear = String(m_dataView->month) + "  " + String(m_dataView->year);
       dayOffsetx = (double)strlen(monthAndYear.c_str());
-      m_GxEPD.setCursor(relativePos.x + GetWidth()/2 - (dayOffsetx/2.0)*15, relativePos.y + 85 );
+      m_GxEPD.setCursor(relativePos.x + GetWidth()/2 - (dayOffsetx/2.0)*15, relativePos.y + 95 );
       m_GxEPD.setTextSize(1);
       
       m_GxEPD.println(monthAndYear);
