@@ -114,3 +114,78 @@ String UtilGoogle::GetDataGoogleScript(const String& url, String & error)
   return line;
   // Serial.print("client stop");
 }
+
+String UtilGoogle::ConvertASCIIToUTF8(const String& stAscii)
+{
+  String result = stAscii;
+  
+  result.replace("°", "\xB0");
+  result.replace("º", "\xba");
+  result.replace("À", "\xC0");
+  result.replace("Á", "\xC1");
+  result.replace("Â", "\xC2");
+  result.replace("Ã", "\xC3");
+  result.replace("Ä", "\xC4");
+  result.replace("Å", "\xC5");
+  result.replace("Æ", "\xC6");
+  result.replace("Ç", "\xC7");
+  result.replace("È", "\xC8");
+  result.replace("É", "\xC9");
+  result.replace("Ê", "\xCA");
+  result.replace("Ë", "\xCB");
+  result.replace("Ì", "\xCC");
+  result.replace("Í", "\xCD");
+  result.replace("Î", "\xCE");
+  result.replace("Ï", "\xCF");
+  result.replace("Ð", "\xD0");
+  result.replace("Ñ", "\xD1");
+  result.replace("Ò", "\xD2");
+  result.replace("Ó", "\xD3");
+  result.replace("Ô", "\xD4");
+  result.replace("Õ", "\xD5");
+  result.replace("Ö", "\xD6");
+  result.replace("×", "\xD7");
+  result.replace("Ø", "\xD8");
+  result.replace("Ù", "\xD9");
+  result.replace("Ú", "\xDA");
+  result.replace("Û", "\xDB");
+  result.replace("Ü", "\xDC");
+  result.replace("Ý", "\xDD");
+  result.replace("Þ", "\xDE");
+  result.replace("ß", "\xDF");
+  result.replace("à", "\xE0");
+  result.replace("á", "\xE1");
+  result.replace("â", "\xE2");
+  result.replace("ã", "\xE3");
+  result.replace("ä", "\xE4");
+  result.replace("å", "\xE5");
+  result.replace("æ", "\xE6");
+  result.replace("ç", "\xE7");
+  result.replace("è", "\xE8");
+  result.replace("é", "\xE9");
+  result.replace("ê", "\xEA");
+  result.replace("ë", "\xEB");
+  result.replace("ì", "\xEC");
+  result.replace("í", "\xED");
+  result.replace("î", "\xEE");
+  result.replace("ï", "\xEF");
+  result.replace("ð", "\xF0");
+  result.replace("ñ", "\xF1");
+  result.replace("ò", "\xF2");
+  result.replace("ó", "\xF3");
+  result.replace("ô", "\xF4");
+  result.replace("õ", "\xF5");
+  result.replace("ö", "\xF6");
+  result.replace("÷", "\xF7");
+  result.replace("ø", "\xF8");
+  result.replace("ù", "\xF9");
+  result.replace("ú", "\xFA");
+  result.replace("û", "\xFB");
+  result.replace("ü", "\xFC");
+  result.replace("ý", "\xFD");
+  result.replace("þ", "\xFE");
+  result.replace("ÿ", "\xFF");
+
+
+  return result;
+}

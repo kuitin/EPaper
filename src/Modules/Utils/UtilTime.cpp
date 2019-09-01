@@ -141,7 +141,6 @@ const int   daylightOffset_sec = 3600;
 const int   Utc = 1;
 unsigned long  UtilTime::GetTime(bool & isDSTEnable)
 {
-    unsigned long result = 0;
     configTime(3600 * Utc, daylightOffset_sec, ntpServer);
     struct tm timeinfo;
     if(!getLocalTime(&timeinfo)){

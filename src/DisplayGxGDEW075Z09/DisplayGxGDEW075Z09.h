@@ -5,6 +5,10 @@
 #include <GxGDEW075Z09/GxGDEW075Z09.h>      // 7.5" b/w/r
 class DisplayGxGDEW075Z09 : public DisplayEPaper 
 {
+	private :
+	char m_RST;
+	char m_Busy;
+	
 	public:
 	DisplayGxGDEW075Z09(char CS, char DC, char RST, char Busy);
 
@@ -14,7 +18,7 @@ class DisplayGxGDEW075Z09 : public DisplayEPaper
 	// void drawLine();
 	// void ModuleName();
 	// void AddModuleContent();
-	private :
+	
 	
 };
 

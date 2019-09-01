@@ -1,7 +1,8 @@
 #include <Modules/TimeLine/DisplayModuleTimeLine.h>
-#include <Fonts/FreeSans9pt7b.h>
+#include <Fonts/OpenSans-Semibold9pt.h>
 #include <TimeLib.h>
 #include <Modules/Utils/UtilTime.h>
+#include <Modules/Utils/UtilGoogle.h>
 
 #define DISPLAYMODULETIMELINE_LINEPOS_X 10
 #define DISPLAYMODULETIMELINE_12HOURTOSEC 43200
@@ -43,7 +44,9 @@ void DisplayModuleTimeLine::FillModule(GxEPD& m_GxEPD)
           }
       }      
 
-      const GFXfont* f = &FreeSans9pt7b;
+    //   const GFXfont* f = &FreeSans9pt7b;
+    // const GFXfont* f = &OpenSans_Regular9pt7b;
+    const GFXfont* f = &OpenSans_Semibold9pt7b;
       m_GxEPD.setFont(f);
       m_GxEPD.setTextColor(GxEPD_BLACK);
       m_GxEPD.setTextSize(1);
@@ -180,7 +183,7 @@ void DisplayModuleTimeLine::FillModule(GxEPD& m_GxEPD)
             m_GxEPD.println(formatDate(currentData));
 
             // Print event content
-            String sentenceToDisplay ( currentData.eventDetails);
+            String sentenceToDisplay ( UtilGoogle::ConvertASCIIToUTF8(currentData.eventDetails));
             if ( sentenceToDisplay.length() > DISPLAYMODULETIMELINE_MAXLENGTHCONTENT )
             {
                 sentenceToDisplay.remove( DISPLAYMODULETIMELINE_MAXLENGTHCONTENT , sentenceToDisplay.length() );

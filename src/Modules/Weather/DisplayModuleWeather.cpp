@@ -2,16 +2,19 @@
 #include <Fonts/FreeMonoBold9pt7b.h>
 #include <Fonts/FreeMono9pt7b.h>
 #include <Fonts/FreeMonoBold18pt7b.h>
+#include <Fonts/OpenSans-Semibold9pt.h>
 #include "utility/IMG_0001.h"
 #include "utility/IMG_0002.h"
 #include "Trad/DisplayEPaperTrad.h"
+#include <Modules/Utils/UtilGoogle.h>
 
 void DisplayModuleWeather::FillModule(GxEPD& m_GxEPD)
 {
+       Serial.println("DisplayModuleWeather::FillModule");
       Point relativePos = GetPosRelative();
-
+      const GFXfont* f_light = &OpenSans_Semibold9pt7b;
       const GFXfont* f = &FreeMonoBold9pt7b;
-      m_GxEPD.setFont(f);
+      m_GxEPD.setFont(f_light);
       m_GxEPD.setTextColor(GxEPD_BLACK);
       m_GxEPD.setCursor(relativePos.x, relativePos.y + 15 );
       m_GxEPD.setTextSize(1);
@@ -23,7 +26,6 @@ void DisplayModuleWeather::FillModule(GxEPD& m_GxEPD)
       m_GxEPD.setCursor(relativePos.x, relativePos.y + 50 );
       m_GxEPD.println(String(m_dataViewWeather->TemperatureOut, 1 ) );
       
-      const GFXfont* f_light = &FreeMono9pt7b;
       m_GxEPD.setFont(f_light);
       m_GxEPD.setCursor(relativePos.x, relativePos.y + 78 );
       m_GxEPD.println(String(WEATHER_TEMPERATUREINDOOR));
@@ -34,7 +36,7 @@ void DisplayModuleWeather::FillModule(GxEPD& m_GxEPD)
 
       m_GxEPD.setFont(f_light);
       m_GxEPD.setCursor(relativePos.x, relativePos.y + 118 );
-      m_GxEPD.println("  " + String(m_dataViewWeather->TemperatureIn, 2 ) + "C" );
+      m_GxEPD.println("  " + String(m_dataViewWeather->TemperatureIn, 2 ) + UtilGoogle::ConvertASCIIToUTF8("°C") );
       m_GxEPD.setCursor(relativePos.x + 140, relativePos.y + 118 );
       m_GxEPD.println( String(m_dataViewWeather->humidity, 2 ) + "%");
       

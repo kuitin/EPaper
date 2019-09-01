@@ -11,6 +11,7 @@ class UtilGoogle
     public:  
     
     static String GetDataGoogleScript(const String& url, String & error);
+    static String ConvertASCIIToUTF8(const String& stAscii);
 };
 
 

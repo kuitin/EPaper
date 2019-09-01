@@ -7,21 +7,43 @@
 #include <Fonts/FreeMonoBold24pt7b.h>
 DisplayGxGDEW075Z09::DisplayGxGDEW075Z09(char CS, char DC, char RST, char Busy):DisplayEPaper( CS,  DC,  RST)
 {
+    m_RST = RST;
+    m_Busy = Busy;
     m_GxEPD = new GxGDEW075Z09(*m_io, RST, Busy);
 }
 
 void DisplayGxGDEW075Z09::Init()
 {
+    if(nullptr != m_GxEPD)
+    {
+        delete m_GxEPD;    
+        m_GxEPD = nullptr;    
+    }
+     m_GxEPD = new GxGDEW075Z09(*m_io, m_RST, m_Busy);
 	GxGDEW075Z09* currentcontext = reinterpret_cast<GxGDEW075Z09*>(m_GxEPD);
     m_GxEPD->init();
+    if(m_modules.size() != 0 )
+    {
+        m_modules.clear();
+    }
 }
 
 void DisplayGxGDEW075Z09::InitWithLog(int logLevel, Print *output)
 {
    // DisplayEPaper::InitWithLog(logLevel, output);
    // LOG_DEBUG("INIT DisplayGxGDEW075Z09");
+    if(nullptr != m_GxEPD)
+    {
+        delete m_GxEPD;    
+        m_GxEPD = nullptr;    
+    }
+     m_GxEPD = new GxGDEW075Z09(*m_io, m_RST, m_Busy);
     GxGDEW075Z09* currentcontext = reinterpret_cast<GxGDEW075Z09*>(m_GxEPD);
     m_GxEPD->init();
+    if(m_modules.size() != 0 )
+    {
+        m_modules.clear();
+    }
 }
 
 
