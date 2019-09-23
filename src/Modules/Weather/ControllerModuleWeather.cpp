@@ -211,7 +211,6 @@ IconWeatherImage::IconWeater ControllerModuleWeather::IconCodeToIconImg(String i
 
 void ControllerModuleWeather::UpdateData()
 {
-    m_dataWeather->TemperatureIn = 20;
     GetServerData(m_forecastURL);
 }
 
@@ -220,4 +219,7 @@ void ControllerModuleWeather::UpdateDataView()
     // No need because the datamodel = data = pointer.
 }
 
+// void ControllerModuleWeather::SaveDataToEEPROM()
+// {
 
+// }

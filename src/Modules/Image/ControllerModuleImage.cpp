@@ -13,13 +13,13 @@ ControllerModuleImage::ControllerModuleImage (const ModuleDimmensions & dimensio
 
 void ControllerModuleImage::UpdateData()
 {
-    // bool isOK = GetDataFromGoogle();
-    // int counter = 0;
-    // while(!isOK && counter < 5)
-    // {
-    //     isOK = GetDataFromGoogle();
-    //     counter ++;
-    // }   
+    bool isOK = GetDataFromGoogle();
+    int counter = 0;
+    while(!isOK && counter < 5)
+    {
+        isOK = GetDataFromGoogle();
+        counter ++;
+    }   
 }
 
 bool ControllerModuleImage::GetDataFromGoogle()

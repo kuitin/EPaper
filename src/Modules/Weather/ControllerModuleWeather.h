@@ -25,6 +25,7 @@ class ControllerModuleWeather : public ControllerModule
     bool m_flagNeedUpdate;
     IconWeatherImage::IconWeater IconCodeToIconImg(String iconTable);
     void CollectWeatherOfWeek(JsonArray& array);
+    // void SaveDataToEEPROM();
 
    
 };
