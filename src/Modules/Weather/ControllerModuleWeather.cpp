@@ -2,9 +2,10 @@
 #include <HTTPClient.h>
 #include <ArduinoJson.h>
 #include <Modules/Utils/UtilTime.h>
+#include <Modules/Utils/UtilFramMem.h>
 
 ControllerModuleWeather::ControllerModuleWeather (const String & forecastURL) :
-    m_forecastURL(forecastURL) ,
+    m_forecastURL(forecastURL) , 
     m_flagNeedUpdate(false)
 {
     m_dataWeather = new DataViewWeather();
@@ -22,9 +23,9 @@ ControllerModuleWeather::~ControllerModuleWeather()
 
 void ControllerModuleWeather::GetServerData(String forecastURL)
 {
-    
-        HTTPClient http;
 
+        HTTPClient http;
+        http.setTimeout(5000);
         // configure traged server and url
         //http.begin("https://www.howsmyssl.com/a/check", ca); //HTTPS
         http.begin(forecastURL); //HTTP
@@ -67,9 +68,13 @@ void ControllerModuleWeather::GetServerData(String forecastURL)
                 // Serial.println(F("Response:"));
                 // Serial.print("humidity: ");Serial.println(humidity,3);
                 // Serial.print("temperature: ");Serial.println(m_dataWeather->TemperatureOut, 3);
+                Serial.printf( "SaveDatas weather datas\n" ); 
+                SaveDatas(m_memories);
             }
         } else {
-            Serial.printf("[HTTP] GET... failed, error: %s\n", http.errorToString(httpCode).c_str());
+            Serial.printf("[HTTP] GET... failed, error: %s\n", http.errorToString(httpCode).c_str());  
+            Serial.printf( "Load old weather datas\n" );        
+            LoadDatas(m_memories);       
         }
 
         http.end();
@@ -209,14 +214,52 @@ IconWeatherImage::IconWeater ControllerModuleWeather::IconCodeToIconImg(String i
     return result;
 }
 
-void ControllerModuleWeather::UpdateData()
-{
+void ControllerModuleWeather::UpdateData(UtilAbstractMem* memories)
+{   
+    if(nullptr != memories)    m_memories = memories;
     GetServerData(m_forecastURL);
 }
 
 void ControllerModuleWeather::UpdateDataView()
 {
     // No need because the datamodel = data = pointer.
+}
+#define WEATHERSTARTADDRESS 0
+void ControllerModuleWeather::SaveDatas(UtilAbstractMem* ) 
+{
+    if(nullptr == m_memories) return;
+    Serial.print("[WEATHER] Save to fram, TemperatureOut: " );  
+    Serial.print(m_dataWeather->TemperatureOut);
+    Serial.println("° C");
+    Serial.print(m_dataWeather->weekWeather[2].TemperatureMax);
+    Serial.println("° C");
+    // m_memories->WriteDouble(WEATHERSTARTADDRESS, m_dataWeather->TemperatureOut);
+    ((UtilFramMem*)m_memories)->writeBlock<DataViewWeather>(WEATHERSTARTADDRESS, *m_dataWeather);
+    //WriteDouble(m_frameI2C, WEATHERSTARTADDRESS, m_dataWeather->TemperatureOut);
+}
+
+// int ControllerModuleWeather::WriteDouble(Adafruit_FRAM_I2C* frameI2C, int address, double value) 
+// {
+//     int newStartAddress = address;
+//     byte* doublePtr= (byte*) &value;
+//     for (int i = 0 ; i < 2 ; i++) 
+//     {
+//         frameI2C->write8( newStartAddress, doublePtr[i] ); 
+//         newStartAddress += 1;
+//     }
+//     return newStartAddress;
+// }
+
+void ControllerModuleWeather::LoadDatas(UtilAbstractMem* ) 
+{
+    if(nullptr == m_memories) return;
+    // m_memories->ReadDouble(WEATHERSTARTADDRESS, m_dataWeather->TemperatureOut);
+    ((UtilFramMem*)m_memories)->readBlock<DataViewWeather>(WEATHERSTARTADDRESS, *m_dataWeather);
+    Serial.print("[WEATHER] Load from fram, TemperatureOut: \n"); 
+    Serial.print(m_dataWeather->TemperatureOut);
+    Serial.println("° C"); 
+    Serial.print(m_dataWeather->weekWeather[2].TemperatureMax);
+    Serial.println("° C");
 }
 
 // void ControllerModuleWeather::SaveDataToEEPROM()

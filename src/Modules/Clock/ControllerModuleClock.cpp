@@ -11,7 +11,7 @@ ControllerModuleClock::ControllerModuleClock (const ModuleDimmensions & dimensio
 }
 
 
-void ControllerModuleClock::UpdateData()
+void ControllerModuleClock::UpdateData(UtilAbstractMem* memories)
 {
     bool isDSTEnable = false;
     unsigned long currentTime = UtilTime::GetTime(isDSTEnable);

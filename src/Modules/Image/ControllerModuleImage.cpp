@@ -11,7 +11,7 @@ ControllerModuleImage::ControllerModuleImage (const ModuleDimmensions & dimensio
 }
 
 
-void ControllerModuleImage::UpdateData()
+void ControllerModuleImage::UpdateData(UtilAbstractMem* memories)
 {
     bool isOK = GetDataFromGoogle();
     int counter = 0;

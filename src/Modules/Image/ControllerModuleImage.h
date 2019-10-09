@@ -10,7 +10,7 @@ class ControllerModuleImage : public ControllerModule
 	public:
     ControllerModuleImage(const ModuleDimmensions & dimensions, const String & imageUrl) ;
     ~ControllerModuleImage(){}
-    void UpdateData();
+    void UpdateData(UtilAbstractMem* memories);
     void UpdateDataView();
     virtual Posistion PositionModule() {return topRight;}
     bool GetDataFromGoogle();

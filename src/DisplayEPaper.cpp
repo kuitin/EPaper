@@ -5,6 +5,15 @@ DisplayEPaper::DisplayEPaper(char CS, char DC, char RST)
     m_io = new GxIO_Class(SPI, CS, DC, RST); 
 }
 
+DisplayEPaper::~DisplayEPaper()
+{
+    if (nullptr != m_memories)
+    {
+        delete m_memories;
+        m_memories = nullptr;
+    }
+}
+
 void DisplayEPaper::Init()
 {
 }
@@ -43,7 +52,7 @@ void DisplayEPaper::UpdateAllDatas()
 {
     for (ControllerModule* module : m_modules) // Problem part
     {
-        module->UpdateData();
+        module->UpdateData(m_memories);
     }
 }
 
@@ -71,4 +80,22 @@ void DisplayEPaper::TestAddNewImageModule(int cornerThickness, int width, int he
     ControllerModuleImage* currentModule = new ControllerModuleImage(ModuleDimmensions(width, height, cornerThickness),
                                                                     imageUrl);
     AddNewModule(currentModule);
+}
+
+
+void DisplayEPaper::SaveAllDatas()
+{
+    for (ControllerModule* module : m_modules) // Problem part
+    {
+        module->SaveDatas(m_memories);
+    }
+}
+
+
+void DisplayEPaper::LoadAllDatas()
+{
+    for (ControllerModule* module : m_modules) // Problem part
+    {
+        module->LoadDatas(m_memories);
+    }
 }

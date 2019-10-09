@@ -2,14 +2,14 @@
 #define _ControllerModuleWeather_H_
 #include "Modules/ControllerModule.h"
 #include "DisplayModuleWeather.h"
-
+#include "Adafruit_FRAM_I2C.h"
 #include "Modules/DisplayModuleCommunicationWifi.h"
 
 class ControllerModuleWeather : public ControllerModule 
 {
 	public:
     ControllerModuleWeather(const String & forecastURL) ;
-    void UpdateData();
+    void UpdateData(UtilAbstractMem* m_memories);
     void UpdateDataView();
     ~ControllerModuleWeather();
      // Setter
@@ -25,7 +25,11 @@ class ControllerModuleWeather : public ControllerModule
     bool m_flagNeedUpdate;
     IconWeatherImage::IconWeater IconCodeToIconImg(String iconTable);
     void CollectWeatherOfWeek(JsonArray& array);
+    virtual void SaveDatas(UtilAbstractMem* m_memories) ;
+    virtual void LoadDatas(UtilAbstractMem* m_memories) ;
+    // int WriteDouble(Adafruit_FRAM_I2C* frameI2C, int address, double value) ;
     // void SaveDataToEEPROM();
+    UtilAbstractMem* m_memories;
 
    
 };

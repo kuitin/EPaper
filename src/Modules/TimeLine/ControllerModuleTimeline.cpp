@@ -26,7 +26,7 @@ ControllerModuleTimeline::~ControllerModuleTimeline()
 }
 
 
-void ControllerModuleTimeline::UpdateData()
+void ControllerModuleTimeline::UpdateData(UtilAbstractMem* memories)
 {
     bool m_isDSTEnable;
     unsigned long currentTime = UtilTime::GetTime(m_isDSTEnable);

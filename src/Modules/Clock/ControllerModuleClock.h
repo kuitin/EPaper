@@ -10,7 +10,7 @@ class ControllerModuleClock : public ControllerModule
 	public:
     ControllerModuleClock(const ModuleDimmensions & dimensions, bool updateTime) ;
     ~ControllerModuleClock(){}
-    void UpdateData();
+    void UpdateData(UtilAbstractMem* memories);
     void UpdateDataView();
     virtual Posistion PositionModule() {return topMiddle;}
 

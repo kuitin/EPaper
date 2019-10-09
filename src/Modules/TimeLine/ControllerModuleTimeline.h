@@ -12,7 +12,7 @@ class ControllerModuleTimeline : public ControllerModule
 	public:
     ControllerModuleTimeline(const String & calendarUrl, int utc = 1) ;
     ~ControllerModuleTimeline();
-    void UpdateData();
+    void UpdateData(UtilAbstractMem* memories);
     void UpdateDataView();
     bool ParseGoogleCalendar();
     virtual Posistion PositionModule() {return none;}
