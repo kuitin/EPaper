@@ -11,6 +11,10 @@ static const int8_t busy = 19;
 EPaper_Class displaya(cs,dc,rst,busy);
 WiFiMulti wifiMulti;
 
+// Declare Fram memory
+//Adafruit_FRAM_I2C fram     = Adafruit_FRAM_I2C(); (optionnal)
+
+
 void setup() {
   Serial.begin(115200);
   Serial.println();
@@ -21,6 +25,15 @@ void setup() {
    if((wifiMulti.run() != WL_CONNECTED)) {
     Serial.print("No wifi\n");
    }
+  // Initialise Fram.(optionnal)
+  /*   if (fram.begin()) {  // you can stick the new i2c addr in here, e.g. begin(0x51);
+    Serial.println("Found I2C FRAM");
+  } else {
+    Serial.println("I2C FRAM not identified ... check your connections?\r\n");
+    Serial.println("Will continue in case this processor doesn't support repeated start\r\n");
+  }*/
+
+  
   // Initialise E-Paper.
   displaya.Init();
   Serial.println("setup done");
@@ -28,19 +41,31 @@ void setup() {
 
 
 void loop() {
+  // Set Fram memory
+  //displaya.setFramMemory(&fram); // (optionnal)
+
+  // Compute view to display weather
+  displaya.TestAddNewTimeLineModule("Link to your server to collect Json");
   
-  Serial.println("Compute pixel position for time line");
-  displaya.TestAddNewTimeLineModule();
-  Serial.println("Compute pixel position for wheather");
   // Please update your Weather Identifier and city identifier in the following URL.
-  displaya.TestAddNewWeatherModule("http://api.openweathermap.org/data/2.5/forecast?id=YOURCITY&APPID=YOURTOKENID");
+  ControllerModuleWeather* currentModule = new ControllerModuleWeather("http://api.openweathermap.org/data/2.5/forecast?id=YOURCITY&APPID=YOURTOKENID");
+  displaya.AddNewModule(currentModule);
+  // update Air quality
+  currentModule->SeteCO2(400); 
+  currentModule->SetTVOC(0);
+  // Update humidity and temperature
+  currentModule->SetTemperatureIn( 20);
+  currentModule->SetHumidity(50);
+  
   Serial.println("Compute pixel position for Clock");
-  displaya.AddNewClockModule(1,100,100, false);
+  displaya.AddNewClockModule(1,224,120, false);
+
+  displaya.TestAddNewImageModule(1,224,384, "Link to your server to collect Json"); // note: Image width max 223 pixel
 	
-   // Update all data fo each module
-   displaya.UpdateAllDatas();
+  // Update all data fo each module
+  displaya.UpdateAllDatas();
    
-   // Update View
+  // Update View
   Serial.println("Refresh E-paper view");
   displaya.DrawModules();
 
