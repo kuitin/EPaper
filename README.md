@@ -8,3 +8,6 @@ Librarie depedency :
  -Arduino-Log : https://github.com/thijse/Arduino-Log
  
  -additional font support, e.g. from https://github.com/olikraus/U8g2_for_Adafruit_GFX
+
+
+For more detail see: https://www.hackster.io/kuitin/epaper-link-f9942a
