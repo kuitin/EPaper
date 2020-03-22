@@ -9,10 +9,22 @@ ControllerModuleImage::ControllerModuleImage (const ModuleDimmensions & dimensio
 {
     m_view = new DisplayModuleImage(dimensions, &m_viewData);
 }
+const char dayStr0a[] PROGMEM = "Sunday";
+const char dayStr1a[] PROGMEM = "Monday";
+const char dayStr2a[] PROGMEM = "Tuesday";
+const char dayStr3a[] PROGMEM = "Wednesday";
+const char dayStr4a[] PROGMEM = "Thursday";
+const char dayStr5a[] PROGMEM = "Friday";
+const char dayStr6a[] PROGMEM = "Saturday";
 
+const PROGMEM char * const PROGMEM dayNames_Pa[] =
+{
+   dayStr0a,dayStr1a,dayStr2a,dayStr3a,dayStr4a,dayStr5a,dayStr6a
+};
 
 void ControllerModuleImage::UpdateData(UtilAbstractMem* memories)
 {
+    if(nullptr != memories)    m_memories = memories;
     bool isOK = GetDataFromGoogle();
     int counter = 0;
     while(!isOK && counter < 5)
@@ -20,6 +32,26 @@ void ControllerModuleImage::UpdateData(UtilAbstractMem* memories)
         isOK = GetDataFromGoogle();
         counter ++;
     }   
+    if( isOK )
+    {
+        SaveDatas( m_memories );
+    }
+    else
+    {
+        LoadDatas( m_memories );
+    }
+    bool isDSTEnable = false;
+    unsigned long currentTime = UtilTime::GetTime(isDSTEnable);
+    tmElements_t newTimeDate;
+    struct tm timeinfo;
+    getLocalTime(&timeinfo);
+    breakTime(currentTime + isDSTEnable*3600, newTimeDate);
+    m_viewData.dayNumber = timeinfo.tm_mday;
+    m_viewData.dayName = dayNames_Pa[timeinfo.tm_wday];
+    m_viewData.month = monthStr(timeinfo.tm_mon);
+    m_viewData.year = timeinfo.tm_year;
+    m_viewData.hour = timeinfo.tm_hour;
+    m_viewData.minute = timeinfo.tm_min;
 }
 
 bool ControllerModuleImage::GetDataFromGoogle()
@@ -46,6 +78,7 @@ bool ControllerModuleImage::GetDataFromGoogle()
         isFinished = root["isFinished"].as<bool>();
         m_viewData.width = root["width"].as<int>();
         m_viewData.height = root["height"].as<int>();
+        m_viewData.length = root["length"].as<int>();
         if(imageIndex == 0)
         {
             m_viewData.freeArray();
@@ -73,4 +106,48 @@ bool ControllerModuleImage::GetDataFromGoogle()
 void ControllerModuleImage::UpdateDataView()
 {
     // No need because the datamodel = data = pointer.
+}
+
+#define IMAGETARTADDRESS 3100
+void ControllerModuleImage::SaveDatas(UtilAbstractMem* ) 
+{
+    if(nullptr == m_memories) return;    
+    // Serial.print("[Timeline] Save datas to fram: \n"); 
+  // TODO probleme memoire avec la meteo qui en utilise trop enqueter sur le weather.
+    uint32_t framAddresss = IMAGETARTADDRESS;
+    framAddresss = m_memories->WriteBool(framAddresss, true );
+    framAddresss = m_memories->writeInt(framAddresss, m_viewData.length);
+    framAddresss = m_memories->writeInt(framAddresss, m_viewData.width);
+    framAddresss = m_memories->writeInt(framAddresss, m_viewData.height);
+    for(int itrCount = 0;  itrCount < m_viewData.length ; itrCount ++ )
+    {
+        framAddresss = m_memories->write8(framAddresss, m_viewData.image_data[itrCount]);
+    }
+
+     Serial.print("[ControllerModuleImage] END ***** Save eventCount : ");
+}
+
+void ControllerModuleImage::LoadDatas(UtilAbstractMem* ) 
+{
+    if(nullptr == m_memories) return;    
+    uint32_t framAddresss = IMAGETARTADDRESS;
+    bool isDataExist = false;
+    framAddresss = m_memories->ReadBool(framAddresss, isDataExist);
+    if(!isDataExist)
+    {
+        return;
+    }
+    framAddresss = m_memories->readInt(framAddresss, m_viewData.length);
+    framAddresss = m_memories->readInt(framAddresss, m_viewData.width);
+    framAddresss = m_memories->readInt(framAddresss, m_viewData.height);
+    if(m_viewData.image_data != nullptr)
+    {
+        delete m_viewData.image_data;
+        m_viewData.image_data = nullptr;
+    }
+    m_viewData.image_data = new uint8_t[m_viewData.length];
+    for(int itrCount = 0;  itrCount < m_viewData.length ; itrCount ++ )
+    {
+        framAddresss = m_memories->read8(framAddresss, m_viewData.image_data[itrCount]);
+    }
 }

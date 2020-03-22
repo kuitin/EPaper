@@ -11,30 +11,68 @@ class UtilFramMem : public UtilAbstractMem
     public:  
         UtilFramMem(Adafruit_FRAM_I2C* fram );
         ~UtilFramMem();
-        void     write8 (uint16_t framAddr, uint16_t value);
-        uint8_t  read8  (uint16_t framAddr);
+        uint16_t     write8 (uint16_t framAddr, uint8_t value);
+        uint16_t  read8  (uint16_t framAddr, uint8_t& value);
         void     write16 (uint16_t framAddr, uint16_t value) ;
         uint16_t  read16  (uint16_t framAddr) ;
-        void     write32 (uint16_t framAddr, uint32_t value) ;
-        uint32_t  read32  (uint16_t framAddr) ;
-        int      WriteDouble(uint16_t framAddr, double value); 
-        int  ReadDouble  (uint16_t framAddr, double& value) ;
+        uint16_t     writeU32 (uint16_t framAddr, uint32_t value) ;
+        uint16_t   readU32  (uint16_t framAddr, uint32_t & result)  ;
+        uint16_t     writeInt (uint16_t framAddr, int value) ;
+        uint16_t   readInt  (uint16_t framAddr, int & result)  ;
+        uint16_t      WriteDouble(uint16_t framAddr, double value); 
+        uint16_t  ReadDouble  (uint16_t framAddr, double& value) ;
+        uint16_t      WriteBool(uint16_t framAddr, bool value); 
+        uint16_t  ReadBool  (uint16_t framAddr, bool& value) ;
+        uint16_t  WriteString(uint16_t framAddr, const String & value);
+        uint16_t  WriteString2(uint16_t framAddr, const String & value);
+        uint16_t   ReadString  (uint16_t framAddr, String & result);
+        uint16_t   ReadString2  (uint16_t framAddr, String & result);
 
-        template <class T> int writeBlock(int address, const T value[], int items)
+        template <class T> uint16_t writeBlock(uint16_t address, const T value[], int items)
         {	
             unsigned int i;
-            unsigned int newStartAddress = address;
+            uint16_t newStartAddress = address;
+            // Serial.print("writeBlock \n"); 
+            // Serial.print(items); 
+            // Serial.print("\n"); 
+            newStartAddress = writeInt (newStartAddress, items) ;
             for (i = 0; i < (unsigned int)items; i++)
+            {
                 newStartAddress = writeBlock<T>(newStartAddress,value[i]);
+                // Serial.print(value[i]); 
+                // Serial.print(" new address : "); Serial.print(newStartAddress); 
+                // Serial.print("\n"); 
+            }
             return i;
+        }
+
+        template <class T> T* readArrayBlock(uint16_t& address,  int& items)
+        {	
+            unsigned int i;
+            items = 0;
+            address = readInt (address, items) ;
+            Serial.print("readArrayBlock items count : "); Serial.print(items);Serial.print("\n"); 
+            T* result = new T((unsigned int)items);
+            
+            
+            for (i = 0; i < (unsigned int)items; i++)
+            {
+                result[i] = 0;
+                result[i] = m_fram->read8( address );  
+                address ++;                          
+                
+                //address = readBlock<T>( address, temp );
+                Serial.print("address : "); Serial.print(address);Serial.print("\n"); 
+            }
+            return result;
         }
 
         /**
          * Template function to write any type of variable, such as structs
         */		
-        template <class T> int writeBlock(int address, const T& value)
+        template <class T> uint16_t writeBlock(uint16_t address, const T& value)
         {
-            int newStartAddress = address;
+            uint16_t newStartAddress = address;
             byte* valuePtr = (byte*) &value;
             unsigned int sizeValue = sizeof(value);
             for (int i = 0 ; i < sizeValue ; i++) 
@@ -48,16 +86,16 @@ class UtilFramMem : public UtilAbstractMem
                 /**
          * Template function to write any type of variable, such as structs
         */		
-        template <class T> int readBlock(int address,  T& value)
+        template <class T> uint16_t readBlock(uint16_t address,  T& value)
         {
             byte* valuePtr = (byte*) &value;
-            int newStartAddress = 0;
+            uint16_t newStartAddress = address;
             for (int i = 0 ; i < sizeof(value) ; i++) 
             {
                 valuePtr[i] = m_fram->read8( newStartAddress );            
                 newStartAddress ++;
             }
-            return sizeof(value);
+            return newStartAddress;
 
         }
 

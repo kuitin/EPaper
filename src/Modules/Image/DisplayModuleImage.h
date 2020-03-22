@@ -11,7 +11,18 @@ class DataViewImage
     int length;
     int  width;
     int height;
-    DataViewImage(){image_data= nullptr; length = 0; width=0;height=0;}
+    int dayNumber;
+    String dayName;
+    String month;
+    int year;
+    int hour;
+    int minute;
+    DataViewImage(){image_data= nullptr; length = 0; width=0;height=0;
+     dayNumber = 0;
+        dayName = "";
+        month = "";
+        year = 0;hour =0; minute=0;
+        }
     ~DataViewImage()
     {
         if(image_data != nullptr)

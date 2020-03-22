@@ -64,8 +64,10 @@ void DisplayModuleWeather::FillModule(GxEPD& m_GxEPD)
                   m_GxEPD.drawExampleBitmap(iconWeatherAfternoon, relativePos.x + 75, relativePos.y + 123 + itrDay*25, 
                                             configAfternoon.width, configAfternoon.height, GxEPD_BLACK);
             }
+            String emptySpace = m_dataViewWeather->weekWeather[itrDay].TemperatureMax >= 10 ?  "  " : "   ";
+            
             m_GxEPD.println(String(UtilTime::getDayOfWeekStr(m_dataViewWeather->weekWeather[itrDay].DayOfWeek)) + "       " +
-                      String(m_dataViewWeather->weekWeather[itrDay].TemperatureMax, 1 ) + "  " +
+                      String(m_dataViewWeather->weekWeather[itrDay].TemperatureMax, 1 ) + emptySpace +
                       String(m_dataViewWeather->weekWeather[itrDay].TemperatureMin, 1 )  );
       }
       

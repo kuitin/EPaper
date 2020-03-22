@@ -3,6 +3,7 @@
 #include <ArduinoJson.h>
 #include <Modules/Utils/UtilTime.h>
 #include <Modules/Utils/UtilFramMem.h>
+#include <WiFi.h>
 
 ControllerModuleWeather::ControllerModuleWeather (const String & forecastURL) :
     m_forecastURL(forecastURL) , 
@@ -23,7 +24,13 @@ ControllerModuleWeather::~ControllerModuleWeather()
 
 void ControllerModuleWeather::GetServerData(String forecastURL)
 {
-
+        if (WiFi.status() != WL_CONNECTED)
+        {
+            Serial.printf("[ControllerModuleWeather] no wifi ");  
+            Serial.printf( "Load old weather datas\n" );        
+            LoadDatas(m_memories);    
+            return;
+        }
         HTTPClient http;
         http.setTimeout(5000);
         // configure traged server and url
@@ -73,7 +80,7 @@ void ControllerModuleWeather::GetServerData(String forecastURL)
             }
         } else {
             Serial.printf("[HTTP] GET... failed, error: %s\n", http.errorToString(httpCode).c_str());  
-            Serial.printf( "Load old weather datas\n" );        
+            Serial.printf( "[ControllerModuleWeather] Load old weather datas\n" );        
             LoadDatas(m_memories);       
         }
 
@@ -253,13 +260,13 @@ void ControllerModuleWeather::SaveDatas(UtilAbstractMem* )
 void ControllerModuleWeather::LoadDatas(UtilAbstractMem* ) 
 {
     if(nullptr == m_memories) return;
-    // m_memories->ReadDouble(WEATHERSTARTADDRESS, m_dataWeather->TemperatureOut);
-    ((UtilFramMem*)m_memories)->readBlock<DataViewWeather>(WEATHERSTARTADDRESS, *m_dataWeather);
+    // m_memories->ReadDouble(WEATHERSTARTADDRESS, m_dataWeather->TemperatureOut);    
     Serial.print("[WEATHER] Load from fram, TemperatureOut: \n"); 
     Serial.print(m_dataWeather->TemperatureOut);
     Serial.println("° C"); 
     Serial.print(m_dataWeather->weekWeather[2].TemperatureMax);
     Serial.println("° C");
+    ((UtilFramMem*)m_memories)->readBlock<DataViewWeather>(WEATHERSTARTADDRESS, *m_dataWeather);
 }
 
 // void ControllerModuleWeather::SaveDataToEEPROM()

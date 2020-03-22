@@ -6,7 +6,7 @@
 #include "Modules/DisplayModuleCommunicationWifi.h"
 #include <SPI.h>
 #include <WiFi.h>
-
+#include <Modules/Utils/UtilFramMem.h>
 class ControllerModuleTimeline : public ControllerModule 
 {
 	public:
@@ -16,6 +16,8 @@ class ControllerModuleTimeline : public ControllerModule
     void UpdateDataView();
     bool ParseGoogleCalendar();
     virtual Posistion PositionModule() {return none;}
+    void SaveDatas(UtilAbstractMem* ) ;
+    void LoadDatas(UtilAbstractMem* ) ;
 
 	private :
     DataViewTimeline* m_dataView;
@@ -23,6 +25,7 @@ class ControllerModuleTimeline : public ControllerModule
     String m_calandarUrl;
     int m_Utc;
     bool m_isDSTEnable;
+    UtilAbstractMem* m_memories;
     
 };
 
